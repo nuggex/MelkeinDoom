@@ -5,6 +5,10 @@ TagManager:
   serializedVersion: 2
   tags:
   - wall
+  - ground
+  - waypoint
+  - wp1
+  - wp2
   layers:
   - Default
   - TransparentFX
