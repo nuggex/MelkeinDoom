@@ -10,6 +10,8 @@ public class R2D2Patrol : MonoBehaviour
     int wpIndex = 0;
     NavMeshAgent nav;
     public string tagname = "";
+    public bool rotating = false;
+    public GameObject healthPickup;
 
     // Start is called before the first frame update
     void Start()
@@ -22,19 +24,52 @@ public class R2D2Patrol : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (Vector3.Distance(transform.position, waypoints[wpIndex].transform.position) <= 3.4f)
+        if (rotating == false)
         {
-            wpIndex++;
-
-            if (wpIndex >= waypoints.Count)
+            if (healthPickup != null)
             {
-                wpIndex = 0;
+                Debug.Log(healthPickup);
+                nav.speed = 20;
+                nav.angularSpeed = 1080;
+                nav.acceleration = 100;
+                nav.SetDestination(healthPickup.transform.position);
+                
+                Debug.Log(nav.destination);
             }
-            nav.SetDestination(waypoints[wpIndex].transform.position);
+            else
+            {
+                if (Vector3.Distance(transform.position, waypoints[wpIndex].transform.position) <= 3.4f)
+                {
+                    wpIndex++;
+
+                    if (wpIndex >= waypoints.Count)
+                    {
+                        wpIndex = 0;
+                    }
+                    nav.SetDestination(waypoints[wpIndex].transform.position);
+                }
+            }
         }
     }
     public List<GameObject> returnWaypoints()
     {
         return waypoints;
+    }
+    public void setRotating()
+    {
+        rotating = true;
+    }
+    public void cancelRotating()
+    {
+        rotating = false;
+    }
+    public GameObject setHealthWaypoint(GameObject p) => healthPickup = p;
+
+    public void clearHealthWaypoint()
+    {
+        healthPickup = null;
+        nav.speed = 10;
+        nav.angularSpeed = 120;
+        nav.SetDestination(waypoints[wpIndex].transform.position);
     }
 }

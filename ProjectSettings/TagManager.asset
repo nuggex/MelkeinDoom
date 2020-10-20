@@ -9,6 +9,7 @@ TagManager:
   - waypoint
   - wp1
   - wp2
+  - health
   layers:
   - Default
   - TransparentFX
