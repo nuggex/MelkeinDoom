@@ -9,12 +9,12 @@ using Unity.MLAgents;
 
 public class RobotController : Agent
 {
-    int points = 0;
+    float Health = 100;
     Rigidbody rb;
     float m_Speed;
     bool grounded;
-    GameObject pointsText;
     Vector3 startingPosition;
+    GameObject[] robot;
     // Start is called before the first frame update
 
  
@@ -23,6 +23,17 @@ public class RobotController : Agent
         rb = gameObject.GetComponent<Rigidbody>();
         m_Speed = 10.0f;
         grounded = true;
+    }
+
+    public void TakeDamage(float x)
+    {
+        Health -= x;
+        Debug.Log(Health);
+
+        if(Health < 0)
+        {
+            Destroy(GameObject.FindGameObjectWithTag("Player"));
+        }
     }
 
    /* public override void OnActionReceived(float[] vectorAction)
@@ -113,6 +124,7 @@ public class RobotController : Agent
             }
         }
 
+        robot = GameObject.FindGameObjectsWithTag("GameController");
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -123,7 +135,16 @@ public class RobotController : Agent
         {
             transform.Rotate(new Vector3(0, -0.25f, 0) * Time.deltaTime * m_Speed, Space.World);
         }
+        if (Input.GetKey(KeyCode.LeftControl)){
 
+            foreach (GameObject x in robot)
+            {
+                if(Vector3.Distance(rb.transform.position,x.transform.position) < 15)
+                {
+                    x.GetComponent<R2AI>().gotAttacked(10.0f);
+                }
+            }
+        }
     }
 
     private void OnCollisionExit(Collision collision)

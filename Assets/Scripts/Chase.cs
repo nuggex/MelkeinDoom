@@ -10,7 +10,7 @@ public class Chase : StateMachineBehaviour
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-        enemy = GameObject.Find("Player");
+        enemy = GameObject.FindGameObjectWithTag("Player");
         me = animator.gameObject;
     }
 
@@ -22,9 +22,8 @@ public class Chase : StateMachineBehaviour
 
         //vända roboten "sakta mak" mot nästa vägpunkt
 
-        me.transform.rotation = Quaternion.Slerp(me.transform.rotation, Quaternion.LookRotation(direction), 0.4f);
+        me.transform.rotation = Quaternion.Slerp(me.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
-
-        me.transform.Translate(0, 0, 0.5f);
+        me.transform.Translate(0, 0, 0.05f);
     }
 }
