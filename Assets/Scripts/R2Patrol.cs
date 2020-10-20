@@ -1,11 +1,12 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
+using System;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class R2D2Test2 : MonoBehaviour
+public class R2Patrol : MonoBehaviour
 {
+
     public List<GameObject> waypoints;
     int wpIndex = 0;
     NavMeshAgent nav;
@@ -14,13 +15,12 @@ public class R2D2Test2 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        //waypoints = GameObject.FindGameObjectsWithTag("wp1").ToList();
 
         nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
         nav.SetDestination(waypoints[wpIndex].transform.position);
     }
-    // Update is called once per frame
-    void Update()
+
+    public void FixedUpdate()
     {
         if (Vector3.Distance(transform.position, waypoints[wpIndex].transform.position) <= 3.4f)
         {

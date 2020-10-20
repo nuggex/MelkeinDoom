@@ -28,11 +28,9 @@ public class R2AI : MonoBehaviour
         float distance = Vector3.Distance(transform.position, enemy.transform.position);
 
 
-        Vector3 direction = enemy.transform.position - transform.position;
-        float angle = Vector3.Angle(direction, transform.forward);
 
 
-        if (distance < 1 && angle < 70)
+        if (distance < 5)
         {
             fsm.SetBool("enemyInSight", true);
         }
@@ -40,5 +38,6 @@ public class R2AI : MonoBehaviour
         {
             fsm.SetBool("enemyInSight", false);
         }
+        Debug.Log(distance);
     }
 }

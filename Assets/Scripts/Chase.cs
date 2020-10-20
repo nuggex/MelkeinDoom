@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 public class Chase : StateMachineBehaviour
 {
@@ -21,9 +22,9 @@ public class Chase : StateMachineBehaviour
 
         //vända roboten "sakta mak" mot nästa vägpunkt
 
-        me.transform.rotation = Quaternion.Slerp(me.transform.rotation, Quaternion.LookRotation(direction), 0.04f);
+        me.transform.rotation = Quaternion.Slerp(me.transform.rotation, Quaternion.LookRotation(direction), 0.4f);
 
 
-        me.transform.Translate(0, 0, 0.06f);
+        me.transform.Translate(0, 0, 0.5f);
     }
 }
