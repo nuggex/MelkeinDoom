@@ -40,8 +40,9 @@ public class R2D2Patrol : MonoBehaviour
             {
                 if (Vector3.Distance(transform.position, waypoints[wpIndex].transform.position) <= 3.4f)
                 {
-                    wpIndex++;
+                    nav.GetComponent<R2AI>().lookAround();
 
+                    wpIndex++;
                     if (wpIndex >= waypoints.Count)
                     {
                         wpIndex = 0;
@@ -71,5 +72,13 @@ public class R2D2Patrol : MonoBehaviour
         nav.speed = 10;
         nav.angularSpeed = 120;
         nav.SetDestination(waypoints[wpIndex].transform.position);
+    }
+    public void pauseMesh()
+    {
+        nav.isStopped = true;
+    }
+    public void resumeMesh()
+    {
+        nav.isStopped = false;
     }
 }

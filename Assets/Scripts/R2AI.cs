@@ -14,7 +14,7 @@ public class R2AI : MonoBehaviour
     Vector3 position;
     Vector3 rotation;
     public float robotHealth = 50;
-
+    public float starttime = 0;
     // Start is called before the first frame update
     void Start()
     {
@@ -33,12 +33,14 @@ public class R2AI : MonoBehaviour
 
         float angle = Vector3.Angle(direction, transform.forward);
 
+
+
         if (robotHealth > 25)
         {
             fsm.SetBool("getHealth", false);
             if (distance < 15 && angle < 70 && distance > 5)
             {
-                fsm.SetFloat("timedScan", 0f);
+                //fsm.SetFloat("timedScan", 0f);
                 fsm.SetBool("enemyInSight", true);
                 if (distance < 10 && angle < 50)
                 {
@@ -52,19 +54,20 @@ public class R2AI : MonoBehaviour
             }
             else
             {
-                fsm.SetBool("hasRotated", false);
                 fsm.SetBool("enemyInSight", false);
                 // Debug.Log(Time.time);
-                //fsm.SetFloat("timedScan", Time.time - fsm.GetFloat("timedScan"));
-
             }
         }
         else
         {
             fsm.SetBool("getHealth", true);
         }
-        
 
+      /*  if ((Time.time - starttime) > 10)
+        {
+            fsm.SetFloat("timedScan", 10f);
+            starttime = Time.time;
+        }*/
     }
 
     public void gotAttacked(float a)
@@ -78,7 +81,7 @@ public class R2AI : MonoBehaviour
     }
     public void resetTimer()
     {
-        fsm.SetFloat("timedScan", 0f);
+        fsm.SetFloat("timedScan", 0.0f);
     }
 
     public void setRotated()
@@ -95,6 +98,20 @@ public class R2AI : MonoBehaviour
         {
             robotHealth += 25;
         }
+    }
+    public void setRotatedOff()
+    {
+        fsm.SetBool("hasRotated", false);
+    }
+
+    public void lookAround()
+    {
+        fsm.SetBool("look", true);
+    }
+
+    public void setLookFalse()
+    {
+        fsm.SetBool("look", false);
     }
 
 }
