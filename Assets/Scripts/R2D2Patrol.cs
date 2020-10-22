@@ -28,13 +28,10 @@ public class R2D2Patrol : MonoBehaviour
         {
             if (healthPickup != null)
             {
-                Debug.Log(healthPickup);
                 nav.speed = 20;
                 nav.angularSpeed = 1080;
                 nav.acceleration = 100;
                 nav.SetDestination(healthPickup.transform.position);
-                
-                Debug.Log(nav.destination);
             }
             else
             {

@@ -9,7 +9,6 @@ using UnityEngine.UIElements;
 public class R2AI : MonoBehaviour
 {
     GameObject enemy;
-    GameObject[] robots;
     Animator fsm;
     Vector3 position;
     Vector3 rotation;
@@ -25,7 +24,6 @@ public class R2AI : MonoBehaviour
         rotation = transform.rotation.eulerAngles;
     }
 
-    // Update is called once per frame
     void FixedUpdate()
     {
         float distance = Vector3.Distance(transform.position, enemy.transform.position);
@@ -34,15 +32,15 @@ public class R2AI : MonoBehaviour
         float angle = Vector3.Angle(direction, transform.forward);
 
 
-
+        // if robothealth < 25 get healing 
         if (robotHealth > 25)
         {
             fsm.SetBool("getHealth", false);
-            if (distance < 15 && angle < 70 && distance > 5)
+            // If distance and angle to enemy is within reach attack 
+            if (distance < 15 && angle < 100 && distance > 5)
             {
-                //fsm.SetFloat("timedScan", 0f);
                 fsm.SetBool("enemyInSight", true);
-                if (distance < 10 && angle < 50)
+                if (distance < 12 && angle < 70)
                 {
                     fsm.SetBool("canAttack", true);
                 }
@@ -55,7 +53,6 @@ public class R2AI : MonoBehaviour
             else
             {
                 fsm.SetBool("enemyInSight", false);
-                // Debug.Log(Time.time);
             }
         }
         else
@@ -63,11 +60,6 @@ public class R2AI : MonoBehaviour
             fsm.SetBool("getHealth", true);
         }
 
-      /*  if ((Time.time - starttime) > 10)
-        {
-            fsm.SetFloat("timedScan", 10f);
-            starttime = Time.time;
-        }*/
     }
 
     public void gotAttacked(float a)
@@ -79,15 +71,7 @@ public class R2AI : MonoBehaviour
             Destroy(this.gameObject);
         }
     }
-    public void resetTimer()
-    {
-        fsm.SetFloat("timedScan", 0.0f);
-    }
 
-    public void setRotated()
-    {
-        fsm.SetBool("hasRotated", true);
-    }
     public bool getHealhtStatus()
     {
         return fsm.GetBool("getHealth");
@@ -97,6 +81,10 @@ public class R2AI : MonoBehaviour
         if (robotHealth < 50)
         {
             robotHealth += 25;
+        }
+        if(robotHealth > 50)
+        {
+            robotHealth = 50;
         }
     }
     public void setRotatedOff()

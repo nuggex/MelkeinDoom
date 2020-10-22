@@ -18,7 +18,7 @@ public class Attack : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
-        float t = 0.3f * Vector3.Distance(enemy.transform.position, me.transform.position);
+        float t = 2.3f * Vector3.Distance(enemy.transform.position, me.transform.position);
         if (Time.time - timer > 5)
         {
             enemy.GetComponent<RobotController>().TakeDamage(t);
