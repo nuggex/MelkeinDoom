@@ -11,7 +11,7 @@ public class MouseLook : MonoBehaviour
     public float maximumX = 360F;
     float rotationX = 0F;
     Quaternion originalRotation;
-    void Update()
+    void FixedUpdate()
     {
         if (axes == RotationAxes.MouseXAndY)
         {

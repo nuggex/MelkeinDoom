@@ -10,6 +10,9 @@ TagManager:
   - wp1
   - wp2
   - health
+  - hamburger
+  - hotdog
+  - cheese
   layers:
   - Default
   - TransparentFX

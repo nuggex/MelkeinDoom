@@ -7,7 +7,7 @@ public class Patrol : StateMachineBehaviour
     //GameObject[] waypoints;
     List<GameObject> waypoints;
     GameObject me;
-    int wpIndex = 0;
+    
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
@@ -15,7 +15,7 @@ public class Patrol : StateMachineBehaviour
         //waypoints = GameObject.FindGameObjectsWithTag("wp1");
         me = animator.gameObject;
         waypoints = me.GetComponent<R2D2Patrol>().returnWaypoints();
-        wpIndex = 0;
+        
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

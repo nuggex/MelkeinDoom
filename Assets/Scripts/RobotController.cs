@@ -6,26 +6,42 @@ using Vector3 = UnityEngine.Vector3;
 using UnityEngine;
 using UnityEngine.UIElements;
 using Unity.MLAgents;
+using Unity.MLAgents.Sensors;
 using Quaternion = UnityEngine.Quaternion;
+using UnityEngine.SceneManagement;
+using System.Net.Sockets;
 
 public class RobotController : Agent
 {
     Quaternion originalRotation;
-    public float sensitivityX = 7F;
-    public float minimumX = -360F;
-    public float maximumX = 360F;
+
     public float Health = 100;
     Rigidbody rb;
     float m_Speed;
+    public float points = 0;
     bool grounded;
     Vector3 startingPosition;
+    Quaternion startRotation;
     GameObject[] robot;
+    public float timer = 0;
+    public float yRot =0f;
     // Start is called before the first frame update
 
 
-    private void Start()
+    /*public void Start()
     {
         rb = gameObject.GetComponent<Rigidbody>();
+        startingPosition = rb.transform.position;
+        startRotation = transform.rotation;
+        m_Speed = 10.0f;
+        grounded = true;
+    }*/
+
+    public override void Initialize()
+    {
+        rb = gameObject.GetComponent<Rigidbody>();
+        startingPosition = rb.transform.position;
+        startRotation = transform.rotation;
         m_Speed = 10.0f;
         grounded = true;
     }
@@ -34,22 +50,39 @@ public class RobotController : Agent
     {
         Health -= x;
         Debug.Log(Health);
-
+        AddReward(10.0f);
         if (Health < 0)
         {
             Destroy(GameObject.FindGameObjectWithTag("Player"));
+            AddReward(-100f);
         }
     }
-
-    /* public override void OnActionReceived(float[] vectorAction)
+    
+    public override void OnActionReceived(float[] vectorAction)
      {
-         //Kollar, ska vi hoppa?
-         if (vectorAction[0] == 1)
-         {
-             jump();
+        transform.rotation = Quaternion.Euler(0, vectorAction[0],0);
+        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1];
+        
+        if(vectorAction[2] > 0)
+        {
+            if (grounded)
+            {
+               // rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
+            }
+        }
 
-         }
-     }
+        if(vectorAction[3] > 0)
+        {
+            foreach (GameObject x in robot)
+            {
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
+                {
+                    x.GetComponent<R2AI>().gotAttacked(10.0f);
+                }
+            }
+        }
+
+    }
 
      public override void OnEpisodeBegin()
      {
@@ -59,44 +92,11 @@ public class RobotController : Agent
      public override void Heuristic(float[] actionsOut)
      {
          //Gör ingenting
-         actionsOut[0] = 0;
-         if (Input.GetKey(KeyCode.W))
-         {
-             transform.position += transform.forward * Time.deltaTime * m_Speed;
-             //rb.velocity = transform.forward * m_Speed; 
-         }
+        actionsOut[0] = 0f;
+        actionsOut[1] = 0f;
+        actionsOut[2] = 0f;
+        actionsOut[3] = 0f;
 
-         if (Input.GetKey(KeyCode.S))
-         {
-             transform.position -= transform.forward * Time.deltaTime * m_Speed;
-             //rb.velocity = -transform.forward * m_Speed;
-
-             //transform.Translate(0, 0, -0.08f);
-         }
-         if (Input.GetKey(KeyCode.A))
-         {
-             transform.position -= transform.right * Time.deltaTime * m_Speed;
-             //transform.Translate( -0.08f, 0, 0);
-         }
-         if (Input.GetKey(KeyCode.D))
-         {
-             transform.position += transform.right * Time.deltaTime * m_Speed;
-             //transform.Translate( 0.08f, 0, 0);
-         }
-
-
-         if (Input.GetKey(KeyCode.LeftArrow))
-         {
-             transform.Rotate(new Vector3(0, 1, 0) * Time.deltaTime * m_Speed, Space.World);
-         }
-
-         if (Input.GetKey(KeyCode.RightArrow))
-         {
-             transform.Rotate(new Vector3(0, -1, 0) * Time.deltaTime * m_Speed, Space.World);
-         }
-     }*/
-    public void FixedUpdate()
-    {
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += transform.forward * Time.deltaTime * m_Speed;
@@ -130,7 +130,71 @@ public class RobotController : Agent
         }
 
         robot = GameObject.FindGameObjectsWithTag("GameController");
+
+        if (Input.GetKey(KeyCode.LeftArrow)) yRot -= 0.5f;
+
+
+        if (Input.GetKey(KeyCode.RightArrow)) yRot += 0.5f;
+
+        actionsOut[0] = yRot;
+             
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            robot = GameObject.FindGameObjectsWithTag("GameController");
+
+            foreach (GameObject x in robot)
+            {
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
+                {
+                    x.GetComponent<R2AI>().gotAttacked(10.0f);
+                }
+            }
+        }
+    }
+    
+    public void FixedUpdate()
+    {
+
+        if(rb.transform.position.y < 60f)
+        {
+            EndEpisode();
+        }
+        TimeKeeper();
+        RequestDecision();
+        /*if (Input.GetKey(KeyCode.W))
+        {
+            transform.position += transform.forward * Time.deltaTime * m_Speed;
+            //rb.velocity = transform.forward * m_Speed; 
+        }
+
+        if (Input.GetKey(KeyCode.S))
+        {
+            transform.position -= transform.forward * Time.deltaTime * m_Speed;
+            //rb.velocity = -transform.forward * m_Speed;
+
+            //transform.Translate(0, 0, -0.08f);
+        }
+        if (Input.GetKey(KeyCode.A))
+        {
+            transform.position -= transform.right * Time.deltaTime * m_Speed;
+            //transform.Translate( -0.08f, 0, 0);
+        }
+        if (Input.GetKey(KeyCode.D))
+        {
+            transform.position += transform.right * Time.deltaTime * m_Speed;
+            //transform.Translate( 0.08f, 0, 0);
+        }
+
+        if (Input.GetKey(KeyCode.Space))
+        {
+            if (grounded)
+            {
+                rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
+            }
+        }
+
         
+
         if (Input.GetKey(KeyCode.LeftArrow))
         {
             transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
@@ -144,7 +208,7 @@ public class RobotController : Agent
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-
+            robot = GameObject.FindGameObjectsWithTag("GameController");
             foreach (GameObject x in robot)
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
@@ -152,6 +216,22 @@ public class RobotController : Agent
                     x.GetComponent<R2AI>().gotAttacked(10.0f);
                 }
             }
+        }*/
+
+    }
+
+    public override void CollectObservations(VectorSensor sensor)
+    {
+        sensor.AddObservation(transform.rotation.x);
+        sensor.AddObservation(transform.rotation.z);
+        sensor.AddObservation(rb.transform.position);
+        sensor.AddObservation(rb.GetComponent<Rigidbody>().velocity);
+        robot = GameObject.FindGameObjectsWithTag("GameController");
+
+        foreach (GameObject x in robot)
+        {
+            
+                sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position)); ;
         }
     }
 
@@ -171,16 +251,28 @@ public class RobotController : Agent
     }
 
 
-    /*
-    public void jump()
-    {
-        if (grounded)
-            rb.velocity = new UnityEngine.Vector3(0, 5, 0);
-    }
     private void Reset()
     {
-        transform.position = startingPosition;
-        rb.velocity = Vector3.zero;
-        pointsText.GetComponent<TextMesh>().text = points.ToString();
-    }*/
+        rb.transform.position = startingPosition;
+        rb.transform.rotation = startRotation;
+        //EndEpisode();
+
+        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+    }
+    public void AddScore(float x)
+    {
+        points += x;
+        AddReward(x);
+    }
+    public void TimeKeeper()
+    {
+
+        if (Time.time - timer > 90)
+        {
+            AddReward(-50.0f);
+            timer = Time.time;
+            EndEpisode();
+        }
+    }
 }
+

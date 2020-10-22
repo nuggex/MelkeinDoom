@@ -22,7 +22,7 @@ public class R2D2Patrol : MonoBehaviour
         nav.SetDestination(waypoints[wpIndex].transform.position);
     }
     // Update is called once per frame
-    void Update()
+    void FixedUpdate()
     {
         if (rotating == false)
         {
