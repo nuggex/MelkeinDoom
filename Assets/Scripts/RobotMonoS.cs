@@ -70,7 +70,7 @@ public class RobotMonoS : MonoBehaviour
             }
         }
 
-        robot = GameObject.FindGameObjectsWithTag("GameController");
+        
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -83,7 +83,7 @@ public class RobotMonoS : MonoBehaviour
         }
         if (Input.GetKey(KeyCode.LeftControl))
         {
-
+            robot = GameObject.FindGameObjectsWithTag("GameController");
             foreach (GameObject x in robot)
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
