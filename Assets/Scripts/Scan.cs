@@ -25,7 +25,7 @@ public class Scan : StateMachineBehaviour
         curRot += System.Math.Abs(me.transform.localRotation.y);
 
 
-        if (curRot > 300.0f)
+        if (curRot > 30.0f)
         {
              
             me.GetComponent<R2AI>().setLookFalse();

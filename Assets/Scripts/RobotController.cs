@@ -23,8 +23,8 @@ public class RobotController : Agent
     Vector3 startingPosition;
     Quaternion startRotation;
     GameObject[] robot;
-    public float timer = 0;
-    public float yRot =0f;
+    public float timer = 0.0f;
+    public float yRot = 0.0f;
     // Start is called before the first frame update
 
 
@@ -55,19 +55,20 @@ public class RobotController : Agent
         {
             Destroy(GameObject.FindGameObjectWithTag("Player"));
             AddReward(-100f);
+            EndEpisode();
         }
     }
     
     public override void OnActionReceived(float[] vectorAction)
      {
-        transform.rotation = Quaternion.Euler(0, vectorAction[0],0);
-        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1];
+        transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime*vectorAction[0]);
+        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1]*100;
         
         if(vectorAction[2] > 0)
         {
             if (grounded)
             {
-               // rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
+             // rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
             }
         }
 
@@ -82,15 +83,20 @@ public class RobotController : Agent
             }
         }
 
+        Debug.Log(vectorAction[0]);
+
     }
 
      public override void OnEpisodeBegin()
      {
-         Reset();
+        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        Reset();
      }
 
      public override void Heuristic(float[] actionsOut)
      {
+
+        Debug.Log("heuristic action");
          //Gör ingenting
         actionsOut[0] = 0f;
         actionsOut[1] = 0f;
@@ -155,7 +161,7 @@ public class RobotController : Agent
     public void FixedUpdate()
     {
 
-        if(rb.transform.position.y < 60f)
+        if(rb.position.y < -60f)
         {
             EndEpisode();
         }
@@ -222,8 +228,7 @@ public class RobotController : Agent
 
     public override void CollectObservations(VectorSensor sensor)
     {
-        sensor.AddObservation(transform.rotation.x);
-        sensor.AddObservation(transform.rotation.z);
+        sensor.AddObservation(transform.rotation.y);
         sensor.AddObservation(rb.transform.position);
         sensor.AddObservation(rb.GetComponent<Rigidbody>().velocity);
         robot = GameObject.FindGameObjectsWithTag("GameController");
@@ -257,7 +262,6 @@ public class RobotController : Agent
         rb.transform.rotation = startRotation;
         //EndEpisode();
 
-        //SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
     }
     public void AddScore(float x)
     {
