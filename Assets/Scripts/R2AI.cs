@@ -14,6 +14,7 @@ public class R2AI : MonoBehaviour
     Vector3 rotation;
     public float robotHealth = 50;
     public float starttime = 0;
+    public string spawnTag = "";
     // Start is called before the first frame update
     void Start()
     {
@@ -24,13 +25,21 @@ public class R2AI : MonoBehaviour
         rotation = transform.rotation.eulerAngles;
     }
 
-    void FixedUpdate()
+    public void FixedUpdate()
     {
         float distance = Vector3.Distance(transform.position, enemy.transform.position);
         Vector3 direction = enemy.transform.position - transform.position;
 
         float angle = Vector3.Angle(direction, transform.forward);
 
+        /*
+        if (this.robotHealth < 1.0f)
+        {
+            GameObject spawn = GameObject.FindGameObjectWithTag(spawnTag);
+
+            Debug.Log("Got hit below treshold");
+            spawn.GetComponent<R2D2Spawner>().setDead();
+        }*/
 
         // if robothealth < 25 get healing 
         if (robotHealth > 25)
@@ -53,6 +62,7 @@ public class R2AI : MonoBehaviour
             else
             {
                 fsm.SetBool("enemyInSight", false);
+                fsm.SetBool("canAttack", false);
             }
         }
         else
@@ -65,26 +75,30 @@ public class R2AI : MonoBehaviour
     public void gotAttacked(float a)
     {
         this.robotHealth -= a;
-        Debug.Log(this.robotHealth);
-        if (this.gameObject && this.robotHealth < 0)
+
+        if (this.robotHealth < 1.0f)
         {
             Destroy(this.gameObject);
         }
+        
     }
 
-    public bool getHealhtStatus()
-    {
-        return fsm.GetBool("getHealth");
-    }
+
+
     public void gotHealth()
     {
-        if (robotHealth < 50)
+        if (robotHealth > 1.0f)
         {
-            robotHealth += 25;
-        }
-        if(robotHealth > 50)
-        {
-            robotHealth = 50;
+
+            if (robotHealth < 50)
+            {
+                robotHealth += 25;
+            }
+            if (robotHealth > 50)
+            {
+                robotHealth = 50;
+            }
+
         }
     }
     public void setRotatedOff()

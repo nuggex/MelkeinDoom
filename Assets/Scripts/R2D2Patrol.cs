@@ -9,17 +9,20 @@ public class R2D2Patrol : MonoBehaviour
     public List<GameObject> waypoints;
     int wpIndex = 0;
     NavMeshAgent nav;
-    public string tagname = "";
     public bool rotating = false;
     public GameObject healthPickup;
 
     // Start is called before the first frame update
-    void Start()
+    public void initPatrol(string tagName)
     {
-        waypoints = GameObject.FindGameObjectsWithTag(tagname).ToList();
+        waypoints = GameObject.FindGameObjectsWithTag(tagName).ToList();
 
         nav = GetComponent<UnityEngine.AI.NavMeshAgent>();
         nav.SetDestination(waypoints[wpIndex].transform.position);
+    }
+    void Start()
+    {
+
     }
     // Update is called once per frame
     void FixedUpdate()

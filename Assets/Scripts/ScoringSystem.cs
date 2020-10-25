@@ -13,8 +13,9 @@ public class ScoringSystem : MonoBehaviour
 
     public void OnTriggerEnter(Collider other)
     {
+        
         other.gameObject.GetComponent<RobotMonoS>().AddScore(score);
         other.gameObject.GetComponent<RobotController>().AddScore(score);
-        Destroy(gameObject);
+        gameObject.SetActive(false);
     }
 }

@@ -38,6 +38,18 @@ public class RobotMonoS : MonoBehaviour
 
     public void FixedUpdate()
     {
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
+            
+            Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
+            foreach (Transform reward in rewards)
+            {
+                reward.gameObject.SetActive(true);
+            }
+            return;
+        }
+
         if (Input.GetKey(KeyCode.W))
         {
             transform.position += transform.forward * Time.deltaTime * m_Speed;
@@ -62,7 +74,7 @@ public class RobotMonoS : MonoBehaviour
             //transform.Translate( 0.08f, 0, 0);
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             if (grounded)
             {
@@ -74,21 +86,24 @@ public class RobotMonoS : MonoBehaviour
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
+            transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
+
+            //transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime);
+            transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
+            //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime);
         }
         if (Input.GetKey(KeyCode.LeftControl))
         {
             robot = GameObject.FindGameObjectsWithTag("GameController");
             foreach (GameObject x in robot)
             {
-                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15.0f)
                 {
-                    x.GetComponent<R2AI>().gotAttacked(10.0f);
+                    x.GetComponent<R2AI>().gotAttacked(100.0f);
                 }
             }
         }
