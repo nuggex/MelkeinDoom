@@ -28,23 +28,22 @@ public class RobotController : Agent
     {
         rb = gameObject.GetComponent<Rigidbody>();
         startingPosition = rb.transform.position;
-        startRotation = transform.rotation;
+        startRotation = rb.transform.rotation;
         m_Speed = 10.0f;
         grounded = true;
     }
 
+ 
     public void TakeDamage(float x)
     {
         Health -= x;
-        Debug.Log(Health);
-        AddReward(-10.0f);
+        AddReward((float)Rewards.takeDamage);
         if (Health < 0)
         {
-            Destroy(GameObject.FindGameObjectWithTag("Player"));
-            AddReward(-100f);
-            EndEpisode();
+            GameManager.instance.ResetGame();
         }
     }
+
 
     public override void OnActionReceived(float[] vectorAction)
     {
@@ -70,13 +69,13 @@ public class RobotController : Agent
             }
         }
 
-        Debug.Log(vectorAction);
+        
 
     }
 
     public override void OnEpisodeBegin()
     {
-        Reset();
+        GameManager.instance.ResetGame();
     }
 
     public override void Heuristic(float[] actionsOut)
@@ -154,6 +153,8 @@ public class RobotController : Agent
         sensor.AddObservation(transform.rotation.y);
         sensor.AddObservation(rb.transform.position);
         sensor.AddObservation(rb.GetComponent<Rigidbody>().velocity);
+        sensor.AddObservation(Health);
+        
         robot = GameObject.FindGameObjectsWithTag("GameController");
 
         foreach (GameObject x in robot)
@@ -178,24 +179,24 @@ public class RobotController : Agent
     }
 
 
-    private void Reset()
+    public void Reset()
     {
-        rb.transform.position = startingPosition;
-        rb.transform.rotation = startRotation;
-        ResetCollectibles();
-
+        transform.position = startingPosition;
+        transform.rotation = startRotation;
+        Health = 100.0f;
+        points = 0.0f;
     }
-    public void AddScore(float x)
+    public void AddScore(Rewards x)
     {
-        points += x;
-        AddReward(x);
+        points += (float)x;
+        AddReward((float)x);
     }
     public void TimeKeeper()
     {
 
         if (Time.time - timer > 60)
         {
-            AddReward(-50.0f);
+            AddReward((float)Rewards.timePenatly);
             timer = Time.time;
             EndEpisode();
         }

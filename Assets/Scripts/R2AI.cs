@@ -78,6 +78,7 @@ public class R2AI : MonoBehaviour
 
         if (this.robotHealth < 1.0f)
         {
+            
             Destroy(this.gameObject);
         }
         

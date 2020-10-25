@@ -28,11 +28,10 @@ public class RobotMonoS : MonoBehaviour
     public void TakeDamage(float x)
     {
         Health -= x;
-        Debug.Log(Health);
 
         if (Health < 0)
         {
-            Destroy(GameObject.FindGameObjectWithTag("Player"));
+            GameManager.instance.ResetGame();
         }
     }
 
@@ -40,14 +39,7 @@ public class RobotMonoS : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
-            
-            Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
-            foreach (Transform reward in rewards)
-            {
-                reward.gameObject.SetActive(true);
-            }
-            return;
+            GameManager.instance.ResetGame();
         }
 
         if (Input.GetKey(KeyCode.W))
@@ -123,9 +115,9 @@ public class RobotMonoS : MonoBehaviour
             grounded = true;
         };
     }
-    public void AddScore(float x)
+    public void AddScore(Rewards x)
     {
-        points += x;
+        points += (float)x;
     }
     public void TimeKeeper()
     {
