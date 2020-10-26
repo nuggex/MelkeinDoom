@@ -104,22 +104,31 @@ public class RobotController : Agent
             transform.position += transform.right * Time.deltaTime * m_Speed;
         }
 
-        if (Input.GetKey(KeyCode.Space))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log(grounded);
             if (grounded)
             {
-                rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
+                gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 12, 0), ForceMode.Impulse);
             }
         }
 
         robot = GameObject.FindGameObjectsWithTag("GameController");
 
-        if (Input.GetKey(KeyCode.LeftArrow)) yRot -= 0.1f;
+        if (Input.GetKey(KeyCode.LeftArrow))
+        {
+            transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
 
+            //transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
+        }
 
-        if (Input.GetKey(KeyCode.RightArrow)) yRot += 0.1f;
+        if (Input.GetKey(KeyCode.RightArrow))
+        {
+            transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
+            //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime);
+        }
 
-        actionsOut[0] = yRot;
+        //actionsOut[0] = yRot;
 
         if (Input.GetKey(KeyCode.LeftControl))
         {

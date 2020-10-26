@@ -49,10 +49,10 @@ public class GameManager : MonoBehaviour
 public enum Rewards
 {
  
-    hotdogReward = 200,
-    burgerReward = 20,
-    cheeseReward = 100,
-    killReward = 50,
+    hotdogReward = 100,
+    burgerReward = 5,
+    cheeseReward = 20,
+    killReward = 10,
 
     // Penalites
 
