@@ -9,6 +9,8 @@ using Unity.MLAgents;
 using Unity.MLAgents.Sensors;
 using Quaternion = UnityEngine.Quaternion;
 using System.Net.Sockets;
+using UnityEngine.AI;
+using UnityEngine.UI;
 
 public class RobotController : Agent
 {
@@ -21,11 +23,20 @@ public class RobotController : Agent
     Vector3 startingPosition;
     Quaternion startRotation;
     GameObject[] robot;
+    GameObject PlayerSpawner;
     public float timer = 0.0f;
     public float yRot = 0.0f;
-
+    GameObject HealthField;
+    GameObject PointsField;
+    Text HealthText;
+    Text PointText;
     public override void Initialize()
     {
+        HealthField = GameObject.Find("Health");
+        HealthText = HealthField.GetComponent<Text>();
+        PointsField = GameObject.Find("Points");
+        PointText = PointsField.GetComponent<Text>();
+        PlayerSpawner = GameObject.Find("Level/PlayerSpawner");
         rb = gameObject.GetComponent<Rigidbody>();
         startingPosition = rb.transform.position;
         startRotation = rb.transform.rotation;
@@ -146,7 +157,8 @@ public class RobotController : Agent
 
     public void FixedUpdate()
     {
-
+        HealthText.text = "Health: " + Mathf.Floor(Health);
+        PointText.text = "Points: " + Mathf.Floor(points);
         if (rb.position.y < -60f)
         {
             EndEpisode();
@@ -190,8 +202,14 @@ public class RobotController : Agent
 
     public void Reset()
     {
-        transform.position = startingPosition;
-        transform.rotation = startRotation;
+        // Ugly fix for getting player character back to spawner using navmesh // 
+        gameObject.GetComponent<NavMeshAgent>().Warp(PlayerSpawner.transform.position);
+
+        /*transform.position = PlayerSpawner.transform.position;
+        transform.rotation = PlayerSpawner.transform.rotation;
+        gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = false;*/
+        
+        // Set health and points to 0 on reset // 
         Health = 100.0f;
         points = 0.0f;
     }
@@ -205,7 +223,7 @@ public class RobotController : Agent
 
         if (Time.time - timer > 60)
         {
-            AddReward((float)Rewards.timePenatly);
+            AddReward((float)Rewards.timePenalty);
             timer = Time.time;
             EndEpisode();
         }

@@ -58,5 +58,5 @@ public enum Rewards
 
     takeDamage = -10,
     death = -100,
-    timePenatly = -50
+    timePenalty = -50
 }
