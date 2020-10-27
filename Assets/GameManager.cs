@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-
+    
     public static GameManager instance;
 
     public RobotController rc;
@@ -42,6 +42,16 @@ public class GameManager : MonoBehaviour
 
     }
 
+    public float DeathTime = 0;
+    public float GetDeathTime()
+    {
+        return DeathTime;
+    }
+    public void SetDeathTime(float IncomingDeath)
+    {
+        DeathTime = IncomingDeath;
+    }
+
 
 
 }
@@ -49,14 +59,14 @@ public class GameManager : MonoBehaviour
 public enum Rewards
 {
  
-    hotdogReward = 100,
-    burgerReward = 5,
-    cheeseReward = 20,
-    killReward = 10,
+    hotdogReward = 10,
+    burgerReward = 1,
+    cheeseReward = 4,
+    killReward = 3,
 
     // Penalites
 
-    takeDamage = -10,
-    death = -100,
-    timePenalty = -50
+    takeDamage = -5,
+    death = -10,
+    timePenalty = -5
 }

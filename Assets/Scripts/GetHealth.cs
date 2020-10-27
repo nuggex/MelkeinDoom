@@ -48,8 +48,6 @@ public class GetHealth : StateMachineBehaviour
         {
             me.GetComponent<R2AI>().gotHealth();
         }
-        
-
     }
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {

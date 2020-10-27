@@ -20,8 +20,6 @@ public class Chase : StateMachineBehaviour
         //Beräknar vektorn från robotens position till följande vägpunkt
         Vector3 direction = enemy.transform.position - me.transform.position;
 
-        //vända roboten "sakta mak" mot nästa vägpunkt
-
         me.transform.rotation = Quaternion.Slerp(me.transform.rotation, Quaternion.LookRotation(direction), 0.1f);
 
         me.transform.Translate(0, 0, 0.05f);

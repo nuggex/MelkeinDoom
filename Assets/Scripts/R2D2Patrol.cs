@@ -56,14 +56,6 @@ public class R2D2Patrol : MonoBehaviour
     {
         return waypoints;
     }
-    public void setRotating()
-    {
-        rotating = true;
-    }
-    public void cancelRotating()
-    {
-        rotating = false;
-    }
     public GameObject setHealthWaypoint(GameObject p) => healthPickup = p;
 
     public void clearHealthWaypoint()

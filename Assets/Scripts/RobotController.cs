@@ -58,24 +58,27 @@ public class RobotController : Agent
 
     public override void OnActionReceived(float[] vectorAction)
     {
+        AddReward(-0.0025f);
+
         transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 100;
 
-        if (vectorAction[2] > 0)
+        /*if (vectorAction[2] > 0)
         {
             if (grounded)
             {
                 // rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
             }
-        }
+        }*/
 
-        if (vectorAction[3] > 0)
+        if (vectorAction[2] > 0)
         {
             foreach (GameObject x in robot)
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
-                    x.GetComponent<R2AI>().gotAttacked(10.0f);
+                    AddReward(0.005f);
+                    x.GetComponent<R2AI>().gotAttacked(2.0f);
                 }
             }
         }
@@ -95,7 +98,6 @@ public class RobotController : Agent
         actionsOut[0] = 0f;
         actionsOut[1] = 0f;
         actionsOut[2] = 0f;
-        actionsOut[3] = 0f;
 
         if (Input.GetKey(KeyCode.W))
         {
@@ -130,20 +132,17 @@ public class RobotController : Agent
         {
             transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
 
-            //transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
             transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
-            //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime);
         }
 
-        //actionsOut[0] = yRot;
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            robot = GameObject.FindGameObjectsWithTag("GameController");
+           // robot = GameObject.FindGameObjectsWithTag("GameController");
 
             foreach (GameObject x in robot)
             {
@@ -157,8 +156,8 @@ public class RobotController : Agent
 
     public void FixedUpdate()
     {
-        HealthText.text = "Health: " + Mathf.Floor(Health);
-        PointText.text = "Points: " + Mathf.Floor(points);
+        HealthText.text = "HP: " + Mathf.Floor(Health);
+        PointText.text = "P: " + Mathf.Floor(points);
         if (rb.position.y < -60f)
         {
             EndEpisode();
@@ -175,7 +174,6 @@ public class RobotController : Agent
         sensor.AddObservation(rb.transform.position);
         sensor.AddObservation(rb.GetComponent<Rigidbody>().velocity);
         sensor.AddObservation(Health);
-        
         robot = GameObject.FindGameObjectsWithTag("GameController");
 
         foreach (GameObject x in robot)
@@ -183,6 +181,16 @@ public class RobotController : Agent
             sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position)); ;
         }
     }
+
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.collider.tag == "wall")
+        {
+            AddReward(-0.05f);
+        }
+    }
+
+
 
     private void OnCollisionExit(Collision collision)
     {
@@ -215,13 +223,17 @@ public class RobotController : Agent
     }
     public void AddScore(Rewards x)
     {
+        if(x == Rewards.killReward)
+        {
+            GameManager.instance.SetDeathTime(Time.time);
+        }
         points += (float)x;
         AddReward((float)x);
     }
     public void TimeKeeper()
     {
 
-        if (Time.time - timer > 60)
+        if (Time.time - timer > 90)
         {
             AddReward((float)Rewards.timePenalty);
             timer = Time.time;

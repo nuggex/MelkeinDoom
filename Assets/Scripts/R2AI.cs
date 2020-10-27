@@ -15,6 +15,7 @@ public class R2AI : MonoBehaviour
     public float robotHealth = 50;
     public float starttime = 0;
     public string spawnTag = "";
+    public Rewards score;
     // Start is called before the first frame update
     void Start()
     {
@@ -32,15 +33,7 @@ public class R2AI : MonoBehaviour
 
         float angle = Vector3.Angle(direction, transform.forward);
 
-        /*
-        if (this.robotHealth < 1.0f)
-        {
-            GameObject spawn = GameObject.FindGameObjectWithTag(spawnTag);
-
-            Debug.Log("Got hit below treshold");
-            spawn.GetComponent<R2D2Spawner>().setDead();
-        }*/
-
+        
         // if robothealth < 25 get healing 
         if (robotHealth > 25)
         {
@@ -78,10 +71,9 @@ public class R2AI : MonoBehaviour
 
         if (this.robotHealth < 1.0f)
         {
-            
+            enemy.GetComponent<RobotController>().AddScore(score);
             Destroy(this.gameObject);
         }
-        
     }
 
 
@@ -116,5 +108,4 @@ public class R2AI : MonoBehaviour
     {
         fsm.SetBool("look", false);
     }
-
 }

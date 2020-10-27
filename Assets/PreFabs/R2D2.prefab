@@ -4029,7 +4029,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   waypoints: []
-  tagname: 
   rotating: 0
   healthPickup: {fileID: 0}
 --- !u!195 &7077351121778543065
@@ -4069,6 +4068,7 @@ MonoBehaviour:
   robotHealth: 50
   starttime: 0
   spawnTag: spawner
+  score: 3
 --- !u!1 &7999913382789203003
 GameObject:
   m_ObjectHideFlags: 0
