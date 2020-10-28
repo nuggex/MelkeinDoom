@@ -18,7 +18,6 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
-        Debug.Log("Resetting");
         resetCollectibles();
         //resetEnemies();
         resetPlayer();
@@ -26,7 +25,6 @@ public class GameManager : MonoBehaviour
 
     private void resetCollectibles()
     {
-        Debug.Log("Resetting collectibles");
         Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
         
         Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
@@ -40,7 +38,6 @@ public class GameManager : MonoBehaviour
     }
     private void resetPlayer()
     {
-        Debug.Log("Resetting player");
         rc.Reset();
     }
     private void resetEnemies()
@@ -65,14 +62,14 @@ public class GameManager : MonoBehaviour
 public enum Rewards
 {
  
-    hotdogReward = 10,
+    hotdogReward = 15,
     burgerReward = 1,
-    cheeseReward = 4,
-    killReward = 3,
+    cheeseReward = 3,
+    killReward = 2,
 
     // Penalites
 
     takeDamage = -1,
     death = -5,
-    timePenalty = -2
+    timePenalty = -5
 }

@@ -33,9 +33,14 @@ public class RobotController : Agent
     Text PointText;
     Text TimeText;
     float attackTimer = 0f;
+    Transform wall;
+    Transform[] walls;
     public override void Initialize()
     {
+        wall = GameObject.Find("Level/map/walls").transform;
+        walls = wall.GetComponentsInChildren<Transform>();
 
+        
         TimeField = GameObject.Find("Time");
         TimeText = TimeField.GetComponent<Text>();
         HealthField = GameObject.Find("Health");
@@ -51,7 +56,7 @@ public class RobotController : Agent
         timer = Time.time;
     }
 
- 
+
     public void TakeDamage(float x)
     {
         Health -= x;
@@ -86,7 +91,7 @@ public class RobotController : Agent
                 {
                     if (Time.time - attackTimer >= 2f)
                     {
-                        AddReward(0.0005f);
+
                         x.GetComponent<R2AI>().gotAttacked(2.0f);
                         attackTimer = Time.time;
                     }
@@ -94,10 +99,10 @@ public class RobotController : Agent
             }
         }
 
-        
+
 
     }
-    
+
     public override void OnEpisodeBegin()
     {
         GameManager.instance.ResetGame();
@@ -136,7 +141,6 @@ public class RobotController : Agent
             }
         }
 
-        robot = GameObject.FindGameObjectsWithTag("GameController");
 
         if (Input.GetKey(KeyCode.LeftArrow))
         {
@@ -152,7 +156,7 @@ public class RobotController : Agent
 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-           // robot = GameObject.FindGameObjectsWithTag("GameController");
+            // robot = GameObject.FindGameObjectsWithTag("GameController");
 
             foreach (GameObject x in robot)
             {
@@ -175,7 +179,7 @@ public class RobotController : Agent
         }
         TimeKeeper();
         RequestDecision();
-        
+        robot = GameObject.FindGameObjectsWithTag("GameController");
 
     }
 
@@ -183,20 +187,28 @@ public class RobotController : Agent
     {
         sensor.AddObservation(transform.rotation.y);
         sensor.AddObservation(rb.transform.position);
-        sensor.AddObservation(rb.GetComponent<Rigidbody>().velocity);
         sensor.AddObservation(Health);
-        robot = GameObject.FindGameObjectsWithTag("GameController");
+
+
+
 
         foreach (GameObject x in robot)
         {
+
             sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position)); ;
+        }
+
+        foreach (Transform x in walls)
+        {
+            sensor.AddObservation(Vector3.Distance(rb.transform.position, x.position)); ;
+
         }
     }
 
-    
+
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.collider.tag == "wall")
+        if (collision.collider.tag == "wall")
         {
             AddReward(-0.1f);
         }
@@ -219,7 +231,7 @@ public class RobotController : Agent
         };
         if (collision.collider.tag == "wall")
         {
-            AddReward(-0.1f);
+            AddReward(-0.5f);
         }
     }
 
@@ -243,7 +255,7 @@ public class RobotController : Agent
         {
             GameManager.instance.SetDeathTime(Time.time);
         }
-        if((float)x == (float)Rewards.hotdogReward)
+        if ((float)x == (float)Rewards.hotdogReward)
         {
             EndEpisode();
         }
@@ -261,6 +273,6 @@ public class RobotController : Agent
         }
     }
 
-    
+
 }
 
