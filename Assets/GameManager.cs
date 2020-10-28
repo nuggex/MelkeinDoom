@@ -18,15 +18,20 @@ public class GameManager : MonoBehaviour
 
     public void ResetGame()
     {
+        Debug.Log("Resetting");
         resetCollectibles();
+        //resetEnemies();
         resetPlayer();
-        resetEnemies();
     }
 
     private void resetCollectibles()
     {
+        Debug.Log("Resetting collectibles");
         Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
+        
         Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
+
+        //collectibleHolder.gameObject.SetActive(true);
         foreach (Transform reward in rewards)
         {
             reward.gameObject.SetActive(true);
@@ -35,6 +40,7 @@ public class GameManager : MonoBehaviour
     }
     private void resetPlayer()
     {
+        Debug.Log("Resetting player");
         rc.Reset();
     }
     private void resetEnemies()
@@ -66,7 +72,7 @@ public enum Rewards
 
     // Penalites
 
-    takeDamage = -5,
-    death = -10,
-    timePenalty = -5
+    takeDamage = -1,
+    death = -5,
+    timePenalty = -2
 }

@@ -58,14 +58,14 @@ public class RobotController : Agent
         AddReward((float)Rewards.takeDamage);
         if (Health < 0)
         {
-            GameManager.instance.ResetGame();
+            EndEpisode();
         }
     }
 
 
     public override void OnActionReceived(float[] vectorAction)
     {
-        AddReward(-0.0025f);
+        //AddReward(-0.0025f);
 
         transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 100;
@@ -86,7 +86,7 @@ public class RobotController : Agent
                 {
                     if (Time.time - attackTimer >= 2f)
                     {
-                        AddReward(0.00005f);
+                        AddReward(0.0005f);
                         x.GetComponent<R2AI>().gotAttacked(2.0f);
                         attackTimer = Time.time;
                     }
@@ -97,7 +97,7 @@ public class RobotController : Agent
         
 
     }
-
+    
     public override void OnEpisodeBegin()
     {
         GameManager.instance.ResetGame();
@@ -175,7 +175,7 @@ public class RobotController : Agent
         }
         TimeKeeper();
         RequestDecision();
-
+        
 
     }
 
@@ -198,7 +198,7 @@ public class RobotController : Agent
     {
         if(collision.collider.tag == "wall")
         {
-            AddReward(-0.05f);
+            AddReward(-0.1f);
         }
     }
 
@@ -219,7 +219,7 @@ public class RobotController : Agent
         };
         if (collision.collider.tag == "wall")
         {
-            AddReward(-0.05f);
+            AddReward(-0.1f);
         }
     }
 
@@ -229,20 +229,25 @@ public class RobotController : Agent
         // getting player character back to spawner using navmesh and reset rotation // 
         gameObject.GetComponent<NavMeshAgent>().Warp(PlayerSpawner.transform.position);
         rb.rotation = startRotation;
-        
-        
         // Set health and points to 0 on reset // 
         Health = 100.0f;
         points = 0.0f;
+        timer = Time.time;
+        //GameManager.instance.ResetGame();
     }
     public void AddScore(Rewards x)
     {
-        if(x == Rewards.killReward)
+        points += (float)x;
+        AddReward((float)x);
+        if (x == Rewards.killReward)
         {
             GameManager.instance.SetDeathTime(Time.time);
         }
-        points += (float)x;
-        AddReward((float)x);
+        if((float)x == (float)Rewards.hotdogReward)
+        {
+            EndEpisode();
+        }
+
     }
     public void TimeKeeper()
     {
@@ -252,19 +257,10 @@ public class RobotController : Agent
             AddReward((float)Rewards.timePenalty);
             timer = Time.time;
             EndEpisode();
+            //GameManager.instance.ResetGame();
         }
     }
 
-    public void ResetCollectibles()
-    {
-        Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
-
-        Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
-        foreach (Transform reward in rewards)
-        {
-            reward.gameObject.SetActive(true);
-        }
-        return;
-    }
+    
 }
 
