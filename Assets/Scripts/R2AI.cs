@@ -42,7 +42,7 @@ public class R2AI : MonoBehaviour
             if (distance < 15 && angle < 100 && distance > 5)
             {
                 fsm.SetBool("enemyInSight", true);
-                if (distance < 12 && angle < 70)
+                if (distance < 12 && angle < 90)
                 {
                     fsm.SetBool("canAttack", true);
                 }

@@ -21,7 +21,7 @@ public class Attack : StateMachineBehaviour
         float t = Vector3.Distance(enemy.transform.position, me.transform.position);
         if (Time.time - timer > 1.0f)
         {
-            enemy.GetComponent<RobotController>().TakeDamage(100.0f/t);
+            enemy.GetComponent<RobotController>().TakeDamage(500.0f/t);
             timer = Time.time;
         }
 

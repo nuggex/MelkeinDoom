@@ -28,10 +28,16 @@ public class RobotController : Agent
     public float yRot = 0.0f;
     GameObject HealthField;
     GameObject PointsField;
+    GameObject TimeField;
     Text HealthText;
     Text PointText;
+    Text TimeText;
+    float attackTimer = 0f;
     public override void Initialize()
     {
+
+        TimeField = GameObject.Find("Time");
+        TimeText = TimeField.GetComponent<Text>();
         HealthField = GameObject.Find("Health");
         HealthText = HealthField.GetComponent<Text>();
         PointsField = GameObject.Find("Points");
@@ -42,6 +48,7 @@ public class RobotController : Agent
         startRotation = rb.transform.rotation;
         m_Speed = 10.0f;
         grounded = true;
+        timer = Time.time;
     }
 
  
@@ -75,10 +82,14 @@ public class RobotController : Agent
         {
             foreach (GameObject x in robot)
             {
-                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 5)
                 {
-                    AddReward(0.005f);
-                    x.GetComponent<R2AI>().gotAttacked(2.0f);
+                    if (Time.time - attackTimer >= 2f)
+                    {
+                        AddReward(0.00005f);
+                        x.GetComponent<R2AI>().gotAttacked(2.0f);
+                        attackTimer = Time.time;
+                    }
                 }
             }
         }
@@ -119,7 +130,6 @@ public class RobotController : Agent
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log(grounded);
             if (grounded)
             {
                 gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 12, 0), ForceMode.Impulse);
@@ -158,6 +168,7 @@ public class RobotController : Agent
     {
         HealthText.text = "HP: " + Mathf.Floor(Health);
         PointText.text = "P: " + Mathf.Floor(points);
+        TimeText.text = "T:" + Mathf.Floor(Time.time - timer);
         if (rb.position.y < -60f)
         {
             EndEpisode();
@@ -182,6 +193,7 @@ public class RobotController : Agent
         }
     }
 
+    
     private void OnCollisionEnter(Collision collision)
     {
         if(collision.collider.tag == "wall")
@@ -205,17 +217,19 @@ public class RobotController : Agent
         {
             grounded = true;
         };
+        if (collision.collider.tag == "wall")
+        {
+            AddReward(-0.05f);
+        }
     }
 
 
     public void Reset()
     {
-        // Ugly fix for getting player character back to spawner using navmesh // 
+        // getting player character back to spawner using navmesh and reset rotation // 
         gameObject.GetComponent<NavMeshAgent>().Warp(PlayerSpawner.transform.position);
-
-        /*transform.position = PlayerSpawner.transform.position;
-        transform.rotation = PlayerSpawner.transform.rotation;
-        gameObject.GetComponent<UnityEngine.AI.NavMeshAgent>().isStopped = false;*/
+        rb.rotation = startRotation;
+        
         
         // Set health and points to 0 on reset // 
         Health = 100.0f;
