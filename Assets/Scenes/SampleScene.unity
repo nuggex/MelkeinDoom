@@ -4794,8 +4794,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b5886a42ad8314c96e24974c16a7f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  rc: {fileID: 2076539794}
   DeathTime: 0
+  rc: {fileID: 2076539794}
 --- !u!4 &818479734
 Transform:
   m_ObjectHideFlags: 0
@@ -12798,7 +12798,7 @@ MonoBehaviour:
     VectorActionSize: 03000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
-  m_Model: {fileID: 0}
+  m_Model: {fileID: 5022602860645237092, guid: 4b5ed10a80356074b8eb82d36e0b886f, type: 3}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Kyle

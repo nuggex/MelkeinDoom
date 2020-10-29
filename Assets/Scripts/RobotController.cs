@@ -96,7 +96,7 @@ public class RobotController : Agent
 
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
         transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
-        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 100;
+        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 80;
 
         // Jumping Action currently disabled // 
         /*if (vectorAction[2] > 0)
@@ -224,10 +224,10 @@ public class RobotController : Agent
         }
 
         // Get Distance to walls, this might be redundant due to raycasting // 
-        foreach (Transform x in walls)
+       /* foreach (Transform x in walls)
         {
             sensor.AddObservation(Vector3.Distance(rb.transform.position, x.position)); ;
-        }
+        }*/
     }
 
     // Check Collisions with world objects // 
