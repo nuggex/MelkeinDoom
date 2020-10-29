@@ -79,10 +79,8 @@ public class RobotController : Agent
         // Reduce health based on incoming damage // 
         Health -= x;
         // Add negative reward for taking damage // 
-        AddReward((float)Rewards.takeDamage);
-        Debug.Log("damage taken: " + x);
+        AddReward(((float)Rewards.takeDamage)/10);
         // If Helath drops below 0 End Episode // 
-        if (Health <= 0f) Debug.Log("You Dead");
         if (Health <= 0f) EndEpisode();
 
     }
@@ -102,11 +100,12 @@ public class RobotController : Agent
         {
             foreach (GameObject x in robot)
             {
-                if (Vector3.Distance(rb.transform.position, x.transform.position) < 10)
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
                     if (Time.time - attackTimer >= 1f)
                     {
                         x.GetComponent<R2AI>().gotAttacked(20.0f);
+                        AddReward(0.25f);
                         attackTimer = Time.time;
                     }
                 }
