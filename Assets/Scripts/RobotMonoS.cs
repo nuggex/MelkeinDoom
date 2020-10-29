@@ -5,6 +5,7 @@ using System.Threading;
 using Vector3 = UnityEngine.Vector3;
 using UnityEngine;
 using UnityEngine.UIElements;
+using System;
 
 public class RobotMonoS : MonoBehaviour
 {
@@ -37,35 +38,22 @@ public class RobotMonoS : MonoBehaviour
 
     public void FixedUpdate()
     {
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            GameManager.instance.ResetGame();
-        }
 
-        if (Input.GetKey(KeyCode.W))
-        {
-            transform.position += transform.forward * Time.deltaTime * m_Speed;
-            //rb.velocity = transform.forward * m_Speed; 
-        }
+        // Reset game with R
+        if (Input.GetKeyDown(KeyCode.R)) GameManager.instance.ResetGame();
 
-        if (Input.GetKey(KeyCode.S))
-        {
-            transform.position -= transform.forward * Time.deltaTime * m_Speed;
-            //rb.velocity = -transform.forward * m_Speed;
 
-            //transform.Translate(0, 0, -0.08f);
-        }
-        if (Input.GetKey(KeyCode.A))
-        {
-            transform.position -= transform.right * Time.deltaTime * m_Speed;
-            //transform.Translate( -0.08f, 0, 0);
-        }
-        if (Input.GetKey(KeyCode.D))
-        {
-            transform.position += transform.right * Time.deltaTime * m_Speed;
-            //transform.Translate( 0.08f, 0, 0);
-        }
+        // Movement including Strafing 
+        if (Input.GetKey(KeyCode.W)) transform.position += transform.forward * Time.deltaTime * m_Speed;
 
+        if (Input.GetKey(KeyCode.S)) transform.position -= transform.forward * Time.deltaTime * m_Speed;
+
+        if (Input.GetKey(KeyCode.A)) transform.position -= transform.right * Time.deltaTime * m_Speed;
+
+        if (Input.GetKey(KeyCode.D)) transform.position += transform.right * Time.deltaTime * m_Speed;
+
+
+        // Jump ( Not Currently used, constrained by navmesh rules to reduce risk of total Yeet while training)
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (grounded)
@@ -74,20 +62,13 @@ public class RobotMonoS : MonoBehaviour
             }
         }
 
-        
+        // Rotation
+        if (Input.GetKey(KeyCode.LeftArrow)) transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
 
-        if (Input.GetKey(KeyCode.LeftArrow))
-        {
-            transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
+        if (Input.GetKey(KeyCode.RightArrow)) transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
 
-            //transform.RotateAround(transform.position, Vector3.up, -360.0f * Time.deltaTime);
-        }
 
-        if (Input.GetKey(KeyCode.RightArrow))
-        {
-            transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
-            //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime);
-        }
+        // Attacking
         if (Input.GetKey(KeyCode.LeftControl))
         {
             robot = GameObject.FindGameObjectsWithTag("GameController");
@@ -103,6 +84,8 @@ public class RobotMonoS : MonoBehaviour
 
     private void OnCollisionExit(Collision collision)
     {
+
+        //detect if player on ground // 
         if (collision.collider.tag == "ground")
         {
             grounded = false;
