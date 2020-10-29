@@ -26,7 +26,6 @@ public class Scan : StateMachineBehaviour
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
         // create rotation and transform around self untill >360 // 
         float rotAmount = (ang * Time.deltaTime) / ti;
         rotatedAmount += rotAmount;
@@ -36,14 +35,12 @@ public class Scan : StateMachineBehaviour
         }
         else
         {
-            me.transform.RotateAround(me.transform.position, Vector3.up,rotAmount);
+            me.transform.RotateAround(me.transform.position, Vector3.up, rotAmount);
         }
-
     }
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // Resume nav mesh
         me.GetComponent<R2D2Patrol>().resumeMesh();
     }
-
 }

@@ -12,6 +12,7 @@ public class R2D2Patrol : MonoBehaviour
     NavMeshAgent nav;
     //public bool rotating = false;
     int wpIndex = 0;
+    string tagSaved;
 
     // Init patrolling when GameObject is spawned // 
     public void initPatrol(string tagName)
@@ -24,6 +25,7 @@ public class R2D2Patrol : MonoBehaviour
 
         // Set Destination to waypoint index 1 // 
         nav.SetDestination(waypoints[wpIndex].transform.position);
+        tagSaved = tagName;
     }
 
     // Update is called once per frame
@@ -43,7 +45,8 @@ public class R2D2Patrol : MonoBehaviour
             if (Vector3.Distance(transform.position, waypoints[wpIndex].transform.position) <= 3.4f)
             {
                 // Look around when waypoint reached // 
-                nav.GetComponent<R2AI>().lookAround();
+               
+                if(waypoints[wpIndex].CompareTag(tagSaved)) nav.GetComponent<R2AI>().lookAround();
 
                 wpIndex++;
                 // Reset waypoint index when last waypoint reached // 
@@ -88,5 +91,6 @@ public class R2D2Patrol : MonoBehaviour
     public void resumeMesh()
     {
         nav.isStopped = false;
+        gameObject.GetComponent<R2AI>().setLookFalse();
     }
 }

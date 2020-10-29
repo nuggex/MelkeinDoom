@@ -44,25 +44,25 @@ public class R2AI : MonoBehaviour
             fsm.SetBool("getHealth", false);
 
             // If distance and angle to enemy is within reach attack 
-            if (distance < 15 && angle < 100 && distance > 5)
+            if (distance < 15 && angle < 100)
             {
                 // Keep enemy in sight // 
                 fsm.SetBool("enemyInSight", true);
-                if (distance < 12 && angle < 90)
-                {
-                    // Go to attack state // 
-                    fsm.SetBool("canAttack", true);
-                }
-                else
-                {
-                    // If player goes out of limits set to False // 
-                    fsm.SetBool("canAttack", false);
-                }
             }
             else
             {
                 // Enemy not in sight // 
                 fsm.SetBool("enemyInSight", false);
+                fsm.SetBool("canAttack", false);
+            }
+            if (distance < 10 && angle < 80)
+            {
+                // Go to attack state // 
+                fsm.SetBool("canAttack", true);
+            }
+            else
+            {
+                // If player goes out of limits set to False // 
                 fsm.SetBool("canAttack", false);
             }
         }
@@ -71,6 +71,7 @@ public class R2AI : MonoBehaviour
             // Getting health // 
             fsm.SetBool("getHealth", true);
         }
+
 
     }
 

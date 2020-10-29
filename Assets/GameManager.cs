@@ -51,6 +51,7 @@ public class GameManager : MonoBehaviour
     {
 
     }
+
     // Get robot death time
     public float GetDeathTime()
     {

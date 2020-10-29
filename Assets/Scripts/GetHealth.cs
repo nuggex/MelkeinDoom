@@ -11,40 +11,31 @@ public class GetHealth : StateMachineBehaviour
     GameObject me;
     public List<float> distance;
     GameObject destination;
-    int length;
+    int index = 0;
+    int HealthPickupCount;
     // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
+        index = 0;
+        destination = null;
+        health = null;
         // Get all Health objects 
         health = GameObject.FindGameObjectsWithTag("health").ToList();
-
         // Set me to animator object // 
         me = animator.gameObject;
 
-        // Count gameObjects in health, hast to be done like this for for loop to work // 
-        length = health.Count;
-        
-        for(int i = 0; i < length; i++)
+        // loop through health game objects // 
+        HealthPickupCount = health.Count;
+        for (int i = 0; i < HealthPickupCount; i++)
         {
-            // Get Distance to health // 
-            float dist = Vector3.Distance(health[i].transform.position, me.transform.position);
-            distance.Add(dist);
-            
-            if (distance.Count > 1)
-            {
-                // Söker efter det health GameObjectet som är närmast
-                if (distance[i] < distance[i - 1])
-                {
-                    destination = health[i];
-                }
-            }
-            else
-            {
-                // Sätter det närmaste helathobjektet till destination // 
-                destination = health[i];
-            }
+            distance.Add(Vector3.Distance(health[i].transform.position, me.transform.position));
         }
+
+        float minVal = distance.Min();
+        index = distance.IndexOf(minVal);
+        destination = health[index];
+        distance.Clear();
+        HealthPickupCount = 0;
     }
 
     // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks

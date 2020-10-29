@@ -12,13 +12,14 @@ using System.Net.Sockets;
 using UnityEngine.AI;
 using UnityEngine.UI;
 using Unity.Mathematics;
+using System.Linq;
 
 public class RobotController : Agent
 {
     // floats and bools
     float m_Speed;
-    public float Health = 100;
-    public float points = 0;
+    public float Health = 100f;
+    public float points = 0f;
     public float timer = 0.0f;
     public float yRot = 0.0f;
     float attackTimer = 0f;
@@ -43,7 +44,6 @@ public class RobotController : Agent
     // Transforms
     Transform wall;
     Transform[] walls;
-
     //Texts 
     Text HealthText;
     Text PointText;
@@ -76,21 +76,20 @@ public class RobotController : Agent
     // Take Damage from enemy attacks
     public void TakeDamage(float x)
     {
-
         // Reduce health based on incoming damage // 
         Health -= x;
         // Add negative reward for taking damage // 
         AddReward((float)Rewards.takeDamage);
-
+        Debug.Log("damage taken: " + x);
         // If Helath drops below 0 End Episode // 
-        if (Health < 0) EndEpisode();
+        if (Health <= 0f) Debug.Log("You Dead");
+        if (Health <= 0f) EndEpisode();
 
     }
-
+    
 
     public override void OnActionReceived(float[] vectorAction)
     {
-
         // Negative Feedback for every action reduce action count
         AddReward(-0.001f);
 
@@ -98,25 +97,16 @@ public class RobotController : Agent
         transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 80;
 
-        // Jumping Action currently disabled // 
-        /*if (vectorAction[2] > 0)
-        {
-            if (grounded)
-            {
-                // rb.AddForce(new Vector3(0, 2, 0), ForceMode.Impulse);
-            }
-        }*/
-
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
         if (vectorAction[2] > 0)
         {
             foreach (GameObject x in robot)
             {
-                if (Vector3.Distance(rb.transform.position, x.transform.position) < 5)
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 10)
                 {
-                    if (Time.time - attackTimer >= 2f)
+                    if (Time.time - attackTimer >= 1f)
                     {
-                        x.GetComponent<R2AI>().gotAttacked(2.0f);
+                        x.GetComponent<R2AI>().gotAttacked(20.0f);
                         attackTimer = Time.time;
                     }
                 }
@@ -148,13 +138,8 @@ public class RobotController : Agent
         if (Input.GetKey(KeyCode.D)) transform.position += transform.right * Time.deltaTime * m_Speed;
 
         // Jumping, not currently implemented due to NavMesh Constraints
-        if (Input.GetKeyDown(KeyCode.Space))
-        {
-            if (grounded)
-            {
-                gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 12, 0), ForceMode.Impulse);
-            }
-        }
+        if (Input.GetKeyDown(KeyCode.Space) && grounded) gameObject.GetComponent<Rigidbody>().AddForce(new Vector3(0, 12, 0), ForceMode.Impulse);
+
 
         //Player rotation
 
@@ -170,9 +155,9 @@ public class RobotController : Agent
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
-                    if (Time.time - attackTimer >= 2f)
+                    if (Time.time - attackTimer >= 0.5f)
                     {
-                        x.GetComponent<R2AI>().gotAttacked(2.0f);
+                        x.GetComponent<R2AI>().gotAttacked(15.0f);
                         attackTimer = Time.time;
                     }
                 }
@@ -200,6 +185,7 @@ public class RobotController : Agent
 
         // Get location of current robots to robot  (Used in attacking ) // 
         robot = GameObject.FindGameObjectsWithTag("GameController");
+
     }
 
     // Collect observartions // 
@@ -217,24 +203,19 @@ public class RobotController : Agent
         // Get Player Current Points // 
         sensor.AddObservation(points);
 
-        // Get Distance to Enemies // 
+
         foreach (GameObject x in robot)
         {
-            sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position)); ;
+            sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position));
         }
 
-        // Get Distance to walls, this might be redundant due to raycasting // 
-       /* foreach (Transform x in walls)
-        {
-            sensor.AddObservation(Vector3.Distance(rb.transform.position, x.position)); ;
-        }*/
     }
 
     // Check Collisions with world objects // 
     private void OnCollisionEnter(Collision collision)
     {
         // Add negative feedback if collsion with wall // 
-        if (collision.collider.tag == "wall")
+        if (collision.collider.CompareTag("wall"))
         {
             AddReward(-0.5f);
         }
@@ -243,18 +224,16 @@ public class RobotController : Agent
     {
 
         // Check if player gameObject has left ground on a jump, this isn't used // 
-        if (collision.collider.tag == "ground")
-        {
-            grounded = false;
-        }
+        if (collision.collider.CompareTag("ground")) grounded = false;
+
     }
     private void OnCollisionStay(Collision collision)
     {
         // Check if player gameObject is on the ground // 
-        if (collision.collider.tag == "ground") grounded = true;
+        if (collision.collider.CompareTag("ground")) grounded = true;
 
         // If player gameObject is continously colliding with wall give negative feedback // 
-        if (collision.collider.tag == "wall") AddReward(-0.5f);
+        if (collision.collider.CompareTag("wall")) AddReward(-0.5f);
     }
 
     // Reset player gameObject // 
@@ -295,4 +274,6 @@ public class RobotController : Agent
             EndEpisode();
         }
     }
+
+
 }
