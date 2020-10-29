@@ -7,19 +7,23 @@ using Unity.MLAgents.Sensors;
 
 public class ScoringSystem : MonoBehaviour
 {
+    // Get Rewards enum // 
     public Rewards score;
-    // Start is called before the first frame update
 
 
     public void OnTriggerEnter(Collider other)
     {
-        
+
         //other.gameObject.GetComponent<RobotMonoS>().AddScore(score);
+
+        // Call AddScore from RobotController // 
+
         other.gameObject.GetComponent<RobotController>().AddScore(score);
-        if(!gameObject.CompareTag("hotdog"))
-        {
-            gameObject.SetActive(false);
-        }
+
+        // Set Collided object Active to False unless it is Hotdog, game is reset when hotdog is hit with EndEpisode // 
+
+        if (!gameObject.CompareTag("hotdog")) gameObject.SetActive(false);
+
 
     }
 }

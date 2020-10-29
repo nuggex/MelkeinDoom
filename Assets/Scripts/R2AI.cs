@@ -28,47 +28,59 @@ public class R2AI : MonoBehaviour
 
     public void FixedUpdate()
     {
+        // Get distance to player character // 
         float distance = Vector3.Distance(transform.position, enemy.transform.position);
+
+        // Get direction to player Character // 
         Vector3 direction = enemy.transform.position - transform.position;
 
+        // Get angle to player character // 
         float angle = Vector3.Angle(direction, transform.forward);
 
-        
         // if robothealth < 25 get healing 
         if (robotHealth > 25)
         {
+            // always reset getHealth to false if health above limit //
             fsm.SetBool("getHealth", false);
+
             // If distance and angle to enemy is within reach attack 
             if (distance < 15 && angle < 100 && distance > 5)
             {
+                // Keep enemy in sight // 
                 fsm.SetBool("enemyInSight", true);
                 if (distance < 12 && angle < 90)
                 {
+                    // Go to attack state // 
                     fsm.SetBool("canAttack", true);
                 }
                 else
                 {
+                    // If player goes out of limits set to False // 
                     fsm.SetBool("canAttack", false);
                 }
-
             }
             else
             {
+                // Enemy not in sight // 
                 fsm.SetBool("enemyInSight", false);
                 fsm.SetBool("canAttack", false);
             }
         }
         else
         {
+            // Getting health // 
             fsm.SetBool("getHealth", true);
         }
 
     }
 
+    // Take Damage when attacked // 
     public void gotAttacked(float a)
     {
+        // Reduce health of enemy with incoming value //
         this.robotHealth -= a;
 
+        // If robot health goes below 1 add score and reward and destroy current robot instance //
         if (this.robotHealth < 1.0f)
         {
             enemy.GetComponent<RobotController>().AddScore(score);
@@ -78,11 +90,11 @@ public class R2AI : MonoBehaviour
 
 
 
+    // Get health if health below 25 and above 0 heal untill 50 // 
     public void gotHealth()
     {
-        if (robotHealth > 1.0f)
+        if (robotHealth > 0f)
         {
-
             if (robotHealth < 50)
             {
                 robotHealth += 25;
@@ -94,16 +106,19 @@ public class R2AI : MonoBehaviour
 
         }
     }
+
+    // Set rotated to false, not used // 
     public void setRotatedOff()
     {
         fsm.SetBool("hasRotated", false);
     }
 
+    // Set bool fsm lookaround to true // 
     public void lookAround()
     {
         fsm.SetBool("look", true);
     }
-
+    // Set bool fsm lookaround to false // 
     public void setLookFalse()
     {
         fsm.SetBool("look", false);

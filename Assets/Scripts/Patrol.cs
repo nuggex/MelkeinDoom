@@ -4,11 +4,12 @@ using UnityEngine;
 
 public class Patrol : StateMachineBehaviour
 {
-    //GameObject[] waypoints;
+
+    // This SMB Doesn't really do anything at this point 
+
     List<GameObject> waypoints;
     GameObject me;
     
-    // OnStateEnter is called when a transition starts and the state machine starts to evaluate this state
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         //Hämtar alla spelobjekt som är taggade som "waypoint" och sparar dem i arrayen
@@ -18,7 +19,6 @@ public class Patrol : StateMachineBehaviour
         
     }
 
-    // OnStateUpdate is called on each Update frame between OnStateEnter and OnStateExit callbacks
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         /*//Beräknar vektorn från robotens position till följande vägpunkt

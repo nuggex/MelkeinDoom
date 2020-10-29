@@ -6,9 +6,12 @@ using UnityEngine;
 
 public class GameManager : MonoBehaviour
 {
-    
+    // GameManager makes it easier to manage the states of the game // 
+    // Create instance of GameManager // 
     public static GameManager instance;
 
+    public float DeathTime = 0;
+    // Get a RobotController // 
     public RobotController rc;
     private void Awake()
     {
@@ -16,49 +19,51 @@ public class GameManager : MonoBehaviour
         instance = this;
     }
 
+    // Reset Game // 
     public void ResetGame()
     {
         resetCollectibles();
         //resetEnemies();
         resetPlayer();
     }
-
+    // Reset all collectible items // 
     private void resetCollectibles()
     {
+        // Get all collectible items // 
         Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
-        
+        // List all collectible children to a array //
         Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
 
-        //collectibleHolder.gameObject.SetActive(true);
+        // Loop through all items and set them to active // 
         foreach (Transform reward in rewards)
         {
             reward.gameObject.SetActive(true);
         }
         return;
     }
+    // Reset player // 
     private void resetPlayer()
     {
+        //Call reset from RobotController // 
         rc.Reset();
     }
     private void resetEnemies()
     {
 
     }
-
-    public float DeathTime = 0;
+    // Get robot death time
     public float GetDeathTime()
     {
         return DeathTime;
     }
+    // Set robot death time
     public void SetDeathTime(float IncomingDeath)
     {
         DeathTime = IncomingDeath;
     }
-
-
-
 }
 
+// Enums for rewards // 
 public enum Rewards
 {
  

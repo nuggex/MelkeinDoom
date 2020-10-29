@@ -7,18 +7,17 @@ using UnityEngine;
 
 public class Scan : StateMachineBehaviour
 {
+
+    // Variables and objects //
     GameObject me;
     float ang = 360.0f;
     float ti = 3f;
     public float rotatedAmount;
-    public float curRot;
 
     Quaternion qInitial;
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
-
-        
-        rotatedAmount = 0;
+        // Set rotated to 0, get animator, pause the navmesh.
         me = animator.gameObject;
         me.GetComponent<R2D2Patrol>().pauseMesh();
         rotatedAmount = 0;
@@ -28,6 +27,7 @@ public class Scan : StateMachineBehaviour
     override public void OnStateUpdate(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
 
+        // create rotation and transform around self untill >360 // 
         float rotAmount = (ang * Time.deltaTime) / ti;
         rotatedAmount += rotAmount;
         if (rotatedAmount >= 360)
@@ -42,6 +42,7 @@ public class Scan : StateMachineBehaviour
     }
     public override void OnStateExit(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
+        // Resume nav mesh
         me.GetComponent<R2D2Patrol>().resumeMesh();
     }
 
