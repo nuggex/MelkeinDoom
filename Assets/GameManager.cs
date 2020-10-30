@@ -10,12 +10,13 @@ public class GameManager : MonoBehaviour
     // Create instance of GameManager // 
     public static GameManager instance;
 
+    public List<GameObject> Enemies;
+    public GameObject Player;
     public float DeathTime = 0;
     // Get a RobotController // 
     public RobotController rc;
     private void Awake()
     {
-        
         instance = this;
     }
 
@@ -68,10 +69,10 @@ public class GameManager : MonoBehaviour
 public enum Rewards
 {
  
-    hotdogReward = 15,
-    burgerReward = 1,
-    cheeseReward = 3,
-    killReward = 2,
+    hotdogReward = 65,
+    burgerReward = 5,
+    cheeseReward = 15,
+    killReward = 5,
 
     // Penalites
 

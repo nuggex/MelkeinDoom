@@ -4320,8 +4320,8 @@ RectTransform:
   - {fileID: 1665936434}
   - {fileID: 1403363206}
   - {fileID: 553272016}
-  m_Father: {fileID: 2076539793}
-  m_RootOrder: 3
+  m_Father: {fileID: 963194228}
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
@@ -4794,6 +4794,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52b5886a42ad8314c96e24974c16a7f8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Enemies: []
+  Player: {fileID: 0}
   DeathTime: 0
   rc: {fileID: 2076539794}
 --- !u!4 &818479734
@@ -5895,7 +5897,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 960960248}
   m_LocalRotation: {x: -0, y: 0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: -65.7, y: -54.17, z: -31.04}
+  m_LocalPosition: {x: -65.7, y: -58.5, z: -31.04}
   m_LocalScale: {x: 6, y: 2, z: 6}
   m_Children: []
   m_Father: {fileID: 1792711827}
@@ -6042,7 +6044,8 @@ Transform:
   m_LocalRotation: {x: 0.19418453, y: 0.00000008940696, z: 0.00000008940696, w: 0.980965}
   m_LocalPosition: {x: 0.09999998, y: 2.6599998, z: -0.56999975}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
+  m_Children:
+  - {fileID: 778623645}
   m_Father: {fileID: 2076539793}
   m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 22.394, y: 0, z: 0}
@@ -12794,7 +12797,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   m_BrainParameters:
     VectorObservationSize: 8
-    NumStackedVectorObservations: 10
+    NumStackedVectorObservations: 5
     VectorActionSize: 03000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1

@@ -12,7 +12,7 @@ public class Chase : StateMachineBehaviour
     override public void OnStateEnter(Animator animator, AnimatorStateInfo stateInfo, int layerIndex)
     {
         // Find game object and self with animator // 
-        enemy = GameObject.FindGameObjectWithTag("Player");
+        enemy = GameManager.instance.Player;
         me = animator.gameObject;
     }
 

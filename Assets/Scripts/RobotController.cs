@@ -32,7 +32,7 @@ public class RobotController : Agent
     Quaternion startRotation;
 
     //GameObjects 
-    GameObject[] robot;
+    //GameObject[] robot;
     GameObject PlayerSpawner;
     GameObject HealthField;
     GameObject PointsField;
@@ -71,6 +71,9 @@ public class RobotController : Agent
         m_Speed = 10.0f;
         grounded = true;
         timer = Time.time;
+
+        // Set Gamemanager Player Object to this 
+        GameManager.instance.Player = this.gameObject;
     }
 
     // Take Damage from enemy attacks
@@ -92,13 +95,15 @@ public class RobotController : Agent
         AddReward(-0.001f);
 
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
-        transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
-        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] * 80;
+        if (vectorAction[0] > 0 )transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
+        if (vectorAction[0] < 0) transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
+        //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
+        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] *7;
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
         if (vectorAction[2] > 0)
         {
-            foreach (GameObject x in robot)
+            foreach (GameObject x in GameManager.instance.Enemies)
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
@@ -150,7 +155,7 @@ public class RobotController : Agent
         // Player Attack on Left Control if GameObject within reach and attack timer > 2f 
         if (Input.GetKey(KeyCode.LeftControl))
         {
-            foreach (GameObject x in robot)
+            foreach (GameObject x in GameManager.instance.Enemies)
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
@@ -183,7 +188,7 @@ public class RobotController : Agent
         RequestDecision();
 
         // Get location of current robots to robot  (Used in attacking ) // 
-        robot = GameObject.FindGameObjectsWithTag("GameController");
+        //robot = GameObject.FindGameObjectsWithTag("GameController");
 
     }
 
@@ -203,7 +208,7 @@ public class RobotController : Agent
         sensor.AddObservation(points);
 
 
-        foreach (GameObject x in robot)
+        foreach (GameObject x in GameManager.instance.Enemies)
         {
             sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position));
         }
@@ -214,17 +219,12 @@ public class RobotController : Agent
     private void OnCollisionEnter(Collision collision)
     {
         // Add negative feedback if collsion with wall // 
-        if (collision.collider.CompareTag("wall"))
-        {
-            AddReward(-0.5f);
-        }
+        if (collision.collider.CompareTag("wall")) AddReward(-2f);
     }
     private void OnCollisionExit(Collision collision)
     {
-
         // Check if player gameObject has left ground on a jump, this isn't used // 
         if (collision.collider.CompareTag("ground")) grounded = false;
-
     }
     private void OnCollisionStay(Collision collision)
     {
@@ -232,7 +232,7 @@ public class RobotController : Agent
         if (collision.collider.CompareTag("ground")) grounded = true;
 
         // If player gameObject is continously colliding with wall give negative feedback // 
-        if (collision.collider.CompareTag("wall")) AddReward(-0.5f);
+        if (collision.collider.CompareTag("wall")) AddReward(-1.5f);
     }
 
     // Reset player gameObject // 
@@ -254,7 +254,7 @@ public class RobotController : Agent
         AddReward((float)x);
 
         // If Rewards is from destroying a enemy set death time for use in spawning next enemy //
-        if (x == Rewards.killReward) GameManager.instance.SetDeathTime(Time.time);
+        //if (x == Rewards.killReward) GameManager.instance.SetDeathTime(Time.time);
 
         // IF Reward is from a hotdog end episode and reset game // 
         if ((float)x == (float)Rewards.hotdogReward) EndEpisode();

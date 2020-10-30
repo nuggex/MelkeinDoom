@@ -16,14 +16,15 @@ public class R2AI : MonoBehaviour
     public float starttime = 0;
     public string spawnTag = "";
     public Rewards score;
+
     // Start is called before the first frame update
     void Start()
     {
-        enemy = GameObject.FindGameObjectWithTag("Player");
-
+        enemy = GameManager.instance.Player;
         fsm = GetComponent<Animator>();
         position = transform.position;
         rotation = transform.rotation.eulerAngles;
+        GameManager.instance.Enemies.Add(this.gameObject);
     }
 
     public void FixedUpdate()
@@ -72,6 +73,16 @@ public class R2AI : MonoBehaviour
             fsm.SetBool("getHealth", true);
         }
 
+        // If robot health goes below 1 add score and reward and destroy current robot instance //
+        if (this.robotHealth < 1.0f)
+        {
+            enemy.GetComponent<RobotController>().AddScore(score);
+            GameManager.instance.SetDeathTime(Time.time);
+            GameManager.instance.Enemies.Remove(this.gameObject);
+            Destroy(this.gameObject);
+
+        }
+
 
     }
 
@@ -81,12 +92,7 @@ public class R2AI : MonoBehaviour
         // Reduce health of enemy with incoming value //
         this.robotHealth -= a;
 
-        // If robot health goes below 1 add score and reward and destroy current robot instance //
-        if (this.robotHealth < 1.0f)
-        {
-            enemy.GetComponent<RobotController>().AddScore(score);
-            Destroy(this.gameObject);
-        }
+ 
     }
 
 
