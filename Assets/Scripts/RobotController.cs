@@ -38,7 +38,7 @@ public class RobotController : Agent
     GameObject HealthField;
     GameObject PointsField;
     GameObject TimeField;
-
+    GameObject hotDog;
     // Rigidbodys
     Rigidbody rb;
 
@@ -52,6 +52,7 @@ public class RobotController : Agent
 
     public override void Initialize()
     {
+        hotDog = GameObject.Find("Level/Collectibles/Hotdog");
         // Find all wall objects for calculating distance to each // 
         wall = GameObject.Find("Level/map/walls").transform;
         walls = wall.GetComponentsInChildren<Transform>();
@@ -109,6 +110,10 @@ public class RobotController : Agent
 
         //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
+        if(WalkingMotion > 0)
+        {
+            AddReward(0.01f);
+        }
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
         if (vectorAction[2] > 0)
@@ -182,7 +187,6 @@ public class RobotController : Agent
 
     public void FixedUpdate()
     {
-
         // Set on Screen texts to current values //
         HealthText.text = "HP: " + Mathf.Floor(Health);
         PointText.text = "P: " + Mathf.Floor(points);
@@ -197,10 +201,7 @@ public class RobotController : Agent
         // Keep time of game and request decision //
         TimeKeeper();
         RequestDecision();
-
         // Get location of current robots to robot  (Used in attacking ) // 
-        //robot = GameObject.FindGameObjectsWithTag("GameController");
-
     }
 
     // Collect observartions // 
@@ -218,19 +219,22 @@ public class RobotController : Agent
         // Get Player Current Points // 
         sensor.AddObservation(points);
 
+        foreach (Transform collectible in GameManager.instance.collectibleHolder)
+        {
+            sensor.AddObservation(Vector3.Distance(rb.transform.position, collectible.position));
+        }
 
         foreach (GameObject x in GameManager.instance.Enemies)
         {
             sensor.AddObservation(Vector3.Distance(rb.transform.position, x.transform.position));
         }
-
     }
 
     // Check Collisions with world objects // 
     private void OnCollisionEnter(Collision collision)
     {
         // Add negative feedback if collsion with wall // 
-        if (collision.collider.CompareTag("wall")) AddReward(-2f);
+        if (collision.collider.CompareTag("wall")) AddReward(-0.075f);
     }
     private void OnCollisionExit(Collision collision)
     {
@@ -243,7 +247,7 @@ public class RobotController : Agent
         if (collision.collider.CompareTag("ground")) grounded = true;
 
         // If player gameObject is continously colliding with wall give negative feedback // 
-        if (collision.collider.CompareTag("wall")) AddReward(-1.5f);
+        if (collision.collider.CompareTag("wall")) AddReward(-0.1f);
     }
 
     // Reset player gameObject // 
@@ -265,7 +269,7 @@ public class RobotController : Agent
         AddReward((float)x);
 
         // If Rewards is from destroying a enemy set death time for use in spawning next enemy //
-        //if (x == Rewards.killReward) GameManager.instance.SetDeathTime(Time.time);
+        if (x == Rewards.killReward) GameManager.instance.SetDeathTime(Time.time);
 
         // IF Reward is from a hotdog end episode and reset game // 
         if ((float)x == (float)Rewards.hotdogReward) EndEpisode();
@@ -284,6 +288,4 @@ public class RobotController : Agent
             EndEpisode();
         }
     }
-
-
 }

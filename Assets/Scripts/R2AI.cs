@@ -96,7 +96,6 @@ public class R2AI : MonoBehaviour
     }
 
 
-
     // Get health if health below 25 and above 0 heal untill 50 // 
     public void gotHealth()
     {
@@ -112,12 +111,6 @@ public class R2AI : MonoBehaviour
             }
 
         }
-    }
-
-    // Set rotated to false, not used // 
-    public void setRotatedOff()
-    {
-        fsm.SetBool("hasRotated", false);
     }
 
     // Set bool fsm lookaround to true // 

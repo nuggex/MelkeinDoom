@@ -15,8 +15,11 @@ public class GameManager : MonoBehaviour
     public float DeathTime = 0;
     // Get a RobotController // 
     public RobotController rc;
+
+    public Transform collectibleHolder;
     private void Awake()
     {
+        collectibleHolder = GameObject.Find("Level/Collectibles").transform;
         instance = this;
     }
 
@@ -31,7 +34,7 @@ public class GameManager : MonoBehaviour
     private void resetCollectibles()
     {
         // Get all collectible items // 
-        Transform collectibleHolder = GameObject.Find("Level/Collectibles").transform;
+        
         // List all collectible children to a array //
         Transform[] rewards = collectibleHolder.GetComponentsInChildren<Transform>(includeInactive: true);
 
@@ -70,7 +73,7 @@ public enum Rewards
 {
  
     hotdogReward = 100,
-    burgerReward = 5,
+    burgerReward = 3,
     cheeseReward = 15,
     killReward = 5,
 
