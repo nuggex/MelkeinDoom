@@ -13,6 +13,7 @@ using UnityEngine.AI;
 using UnityEngine.UI;
 using Unity.Mathematics;
 using System.Linq;
+using UnityEditor;
 
 public class RobotController : Agent
 {
@@ -82,23 +83,32 @@ public class RobotController : Agent
         // Reduce health based on incoming damage // 
         Health -= x;
         // Add negative reward for taking damage // 
-        AddReward(((float)Rewards.takeDamage)/10);
+        AddReward(((float)Rewards.takeDamage) / 10);
         // If Helath drops below 0 End Episode // 
         if (Health <= 0f) EndEpisode();
 
     }
-    
+
 
     public override void OnActionReceived(float[] vectorAction)
     {
         // Negative Feedback for every action reduce action count
-        AddReward(-0.001f);
+        //AddReward(-0.0015f);
 
+        float WalkingMotion = Mathf.Clamp(vectorAction[0], -1,1);
+        float TurningMotion = Mathf.Clamp(vectorAction[1], -1, 1);
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
-        if (vectorAction[0] > 0 )transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
-        if (vectorAction[0] < 0) transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
+        if (TurningMotion > 0.5)
+        {
+            transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
+        }
+        else if (TurningMotion < -0.5)
+        {
+            transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
+        }
+
         //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
-        transform.position += transform.forward * Time.deltaTime * m_Speed * vectorAction[1] *7;
+        transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
         if (vectorAction[2] > 0)
@@ -107,6 +117,7 @@ public class RobotController : Agent
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
                 {
+                    AddReward(0.1f);
                     if (Time.time - attackTimer >= 1f)
                     {
                         x.GetComponent<R2AI>().gotAttacked(20.0f);
@@ -264,7 +275,7 @@ public class RobotController : Agent
     public void TimeKeeper()
     {
         // IF Current Episode has been running for over 90 seconds // 
-        if (Time.time - timer > 90)
+        if (Time.time - timer > 300)
         {
             // Add Time Penalty to rewards // 
             AddReward((float)Rewards.timePenalty);

@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
 public enum Rewards
 {
  
-    hotdogReward = 65,
+    hotdogReward = 100,
     burgerReward = 5,
     cheeseReward = 15,
     killReward = 5,
