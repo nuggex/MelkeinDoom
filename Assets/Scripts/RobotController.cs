@@ -96,7 +96,7 @@ public class RobotController : Agent
         // Negative Feedback for every action reduce action count
         //AddReward(-0.0015f);
 
-        float WalkingMotion = Mathf.Clamp(vectorAction[0], -1,1);
+        float WalkingMotion = Mathf.Clamp(vectorAction[0], -1, 1);
         float TurningMotion = Mathf.Clamp(vectorAction[1], -1, 1);
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
         if (TurningMotion > 0.5)
@@ -107,10 +107,14 @@ public class RobotController : Agent
         {
             transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
         }
+        if (TurningMotion < 0.5f && TurningMotion > -0.5f)
+        {
+            AddReward(-0.01f);
+        }
 
         //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
-        if(WalkingMotion > 0)
+        if (WalkingMotion > 0)
         {
             AddReward(0.01f);
         }

@@ -2285,7 +2285,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52.98451
+      value: -52.4
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12138,7 +12138,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52.98451
+      value: -52.4
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12204,7 +12204,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52.98451
+      value: -52.4
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.z
@@ -12872,7 +12872,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52.98451
+      value: -52.4
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.z
@@ -13044,7 +13044,6 @@ MonoBehaviour:
   - hotdog
   - cheese
   - hamburger
-  - wall
   m_RaysPerDirection: 7
   m_MaxRayDegrees: 70
   m_SphereCastRadius: 0.6
@@ -13055,8 +13054,8 @@ MonoBehaviour:
   m_ObservationStacks: 1
   rayHitColor: {r: 1, g: 0, b: 0, a: 1}
   rayMissColor: {r: 1, g: 1, b: 1, a: 1}
-  m_StartVerticalOffset: 2.25
-  m_EndVerticalOffset: 1.15
+  m_StartVerticalOffset: 2
+  m_EndVerticalOffset: 0.75
 --- !u!114 &2076539800
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -13653,7 +13652,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -52.98451
+      value: -52.4
       objectReference: {fileID: 0}
     - target: {fileID: 6520242779689997596, guid: 6dabcafa1b136d14dbb1656993da6c35, type: 3}
       propertyPath: m_LocalPosition.z
