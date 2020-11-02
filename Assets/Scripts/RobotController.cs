@@ -108,7 +108,7 @@ public class RobotController : Agent
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
         if (WalkingMotion > 0)
         {
-            AddReward(0.01f);
+            AddReward(0.0015f);
         }
         if(WalkingMotion < 0)
         {
@@ -122,7 +122,7 @@ public class RobotController : Agent
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 12)
                 {
-                    AddReward(0.1f);
+                    
                     if (Time.time - attackTimer >= 1f)
                     {
                         x.GetComponent<R2AI>().gotAttacked(20.0f);
