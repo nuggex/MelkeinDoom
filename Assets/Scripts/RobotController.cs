@@ -99,24 +99,20 @@ public class RobotController : Agent
         float WalkingMotion = Mathf.Clamp(vectorAction[0], -1, 1);
         float TurningMotion = Mathf.Clamp(vectorAction[1], -1, 1);
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
-        if (TurningMotion > 0.5)
-        {
-            transform.Rotate(Vector3.up * 360.0f * Time.deltaTime);
-        }
-        else if (TurningMotion < -0.5)
-        {
-            transform.Rotate(-Vector3.up * 360.0f * Time.deltaTime);
-        }
-        if (TurningMotion < 0.5f && TurningMotion > -0.5f)
-        {
-            AddReward(-0.01f);
-        }
+
+        transform.Rotate(Vector3.up * 360.0f * Time.deltaTime * TurningMotion);
+        
+        
 
         //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
         if (WalkingMotion > 0)
         {
-            AddReward(0.015f);
+            AddReward(0.01f);
+        }
+        if(WalkingMotion < 0)
+        {
+            AddReward(-0.01f);
         }
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
@@ -124,7 +120,7 @@ public class RobotController : Agent
         {
             foreach (GameObject x in GameManager.instance.Enemies)
             {
-                if (Vector3.Distance(rb.transform.position, x.transform.position) < 15)
+                if (Vector3.Distance(rb.transform.position, x.transform.position) < 12)
                 {
                     AddReward(0.1f);
                     if (Time.time - attackTimer >= 1f)
@@ -238,7 +234,7 @@ public class RobotController : Agent
     private void OnCollisionEnter(Collision collision)
     {
         // Add negative feedback if collsion with wall // 
-        if (collision.collider.CompareTag("wall")) AddReward(-0.075f);
+        if (collision.collider.CompareTag("wall")) AddReward(-0.5f);
     }
     private void OnCollisionExit(Collision collision)
     {

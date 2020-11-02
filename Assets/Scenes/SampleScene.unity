@@ -13044,6 +13044,7 @@ MonoBehaviour:
   - hotdog
   - cheese
   - hamburger
+  - wall
   m_RaysPerDirection: 7
   m_MaxRayDegrees: 70
   m_SphereCastRadius: 0.6
