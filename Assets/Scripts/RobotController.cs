@@ -116,7 +116,7 @@ public class RobotController : Agent
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
         if (WalkingMotion > 0)
         {
-            AddReward(0.01f);
+            AddReward(0.015f);
         }
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
