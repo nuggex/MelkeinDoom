@@ -73,13 +73,13 @@ public enum Rewards
 {
  
     hotdogReward = 100,
-    burgerReward = 10,
-    cheeseReward = 15,
-    killReward = 15,
+    burgerReward = 1,
+    cheeseReward = 2,
+    killReward = 1,
 
     // Penalites
 
     takeDamage = -1,
-    death = -50,
+    death = -10,
     timePenalty = -100
 }

@@ -9863,6 +9863,10 @@ PrefabInstance:
       propertyPath: wpName
       value: wp2
       objectReference: {fileID: 0}
+    - target: {fileID: 5669159605141982319, guid: 3f863e091474bd242bb2faa1e528fc21, type: 3}
+      propertyPath: r2PreFab
+      value: 
+      objectReference: {fileID: 7077351121778543064, guid: c4d31f3a2f214c74a96614c28df8aa4a, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f863e091474bd242bb2faa1e528fc21, type: 3}
 --- !u!1 &1534197637
@@ -12968,7 +12972,7 @@ MonoBehaviour:
     VectorActionSize: 03000000
     VectorActionDescriptions: []
     VectorActionSpaceType: 1
-  m_Model: {fileID: 5022602860645237092, guid: aced9206d746e134282ca3afb0adf9dc, type: 3}
+  m_Model: {fileID: 0}
   m_InferenceDevice: 0
   m_BehaviorType: 0
   m_BehaviorName: Kyle
@@ -13638,6 +13642,10 @@ PrefabInstance:
       propertyPath: wpName
       value: wp1
       objectReference: {fileID: 0}
+    - target: {fileID: 5669159605141982319, guid: 3f863e091474bd242bb2faa1e528fc21, type: 3}
+      propertyPath: r2PreFab
+      value: 
+      objectReference: {fileID: 7077351121778543064, guid: c4d31f3a2f214c74a96614c28df8aa4a, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 3f863e091474bd242bb2faa1e528fc21, type: 3}
 --- !u!1001 &6520242780425122890

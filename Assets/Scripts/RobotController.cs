@@ -94,26 +94,19 @@ public class RobotController : Agent
     public override void OnActionReceived(float[] vectorAction)
     {
         // Negative Feedback for every action reduce action count
-        //AddReward(-0.0015f);
+        AddReward(-0.0005f);
 
         float WalkingMotion = Mathf.Clamp(vectorAction[0], -1, 1);
         float TurningMotion = Mathf.Clamp(vectorAction[1], -1, 1);
         // Rotate Around self and move Forward and back depending on Vector action -1 -> 1 
 
         transform.Rotate(Vector3.up * 360.0f * Time.deltaTime * TurningMotion);
-        
-        
+
+
 
         //transform.RotateAround(transform.position, Vector3.up, 360.0f * Time.deltaTime * vectorAction[0]);
         transform.position += transform.forward * Time.deltaTime * m_Speed * WalkingMotion * 15;
-        if (WalkingMotion > 0)
-        {
-            AddReward(0.0015f);
-        }
-        if(WalkingMotion < 0)
-        {
-            AddReward(-0.01f);
-        }
+
 
         // IF VectorAction [2] > 0 and Enemy within 5 Distance units attack it and get reward if it dies, Attacks delayed to once per two Time units // 
         if (vectorAction[2] > 0)
@@ -122,7 +115,7 @@ public class RobotController : Agent
             {
                 if (Vector3.Distance(rb.transform.position, x.transform.position) < 12)
                 {
-                    
+
                     if (Time.time - attackTimer >= 1f)
                     {
                         x.GetComponent<R2AI>().gotAttacked(20.0f);
@@ -199,7 +192,7 @@ public class RobotController : Agent
         }
 
         // Keep time of game and request decision //
-        TimeKeeper();
+        //TimeKeeper();
         RequestDecision();
         // Get location of current robots to robot  (Used in attacking ) // 
     }
@@ -264,15 +257,23 @@ public class RobotController : Agent
     // Add Scores and rewards //
     public void AddScore(Rewards x)
     {
-        // Add Points and Rewards for current rewards
-        points += (float)x;
-        AddReward((float)x);
-
+        // IF Reward is from a hotdog end episode and reset game //
+        if (x == Rewards.hotdogReward)
+        {
+            SetReward(100f);
+            EndEpisode();
+        }
+        else
+        {
+            // Add Points and Rewards for current rewards
+            points += (float)x;
+            AddReward((float)x);
+        }
         // If Rewards is from destroying a enemy set death time for use in spawning next enemy //
         if (x == Rewards.killReward) GameManager.instance.SetDeathTime(Time.time);
 
-        // IF Reward is from a hotdog end episode and reset game // 
-        if ((float)x == (float)Rewards.hotdogReward) EndEpisode();
+
+
     }
 
     // Time keeping
